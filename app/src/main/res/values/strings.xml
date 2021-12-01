@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Go4Lunch</string>
+
+    <!-- Content description -->
+    <string name="iw_ic_g4l">Go4Lunch Ico</string>
+
+    <!-- TEXTS -->
 </resources>
