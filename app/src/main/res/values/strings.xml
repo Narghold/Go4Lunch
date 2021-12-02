@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Go4Lunch</string>
 
-    <!-- Content description -->
-    <string name="iw_ic_g4l">Go4Lunch Ico</string>
-
     <!-- TEXTS -->
+    <!-- Login buttons -->
+    <string name="btn_login_google">Login with Google</string>
+    <string name="btn_login_facebook">Login with Facebook</string>
 </resources>

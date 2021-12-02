@@ -12,4 +12,6 @@
     <color name="orange_toolbar">#FFFC3F1B</color>
     <color name="orange_side_menu">#FFFC7540</color>
     <color name="orange_secondary">#FFB50504</color>
+
+    <color name="facebook_blue">#FF4867AA</color>
 </resources>
