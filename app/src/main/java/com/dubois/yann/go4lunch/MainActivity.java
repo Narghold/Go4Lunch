@@ -3,6 +3,7 @@ package com.dubois.yann.go4lunch;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -14,12 +15,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding mBinding;
 
-    private GoogleSignInClient mGoogleSignInClient;
+    FirebaseUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,33 +31,23 @@ public class MainActivity extends AppCompatActivity {
         View view = mBinding.getRoot();
         setContentView(view);
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
+        //Get the las account connected to app
+        FirebaseAuth mMAuth = FirebaseAuth.getInstance();
+        currentUser = mMAuth.getCurrentUser();
 
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
-        if (acct != null) {
-            String personName = acct.getDisplayName();
-            String personGivenName = acct.getGivenName();
-            String personFamilyName = acct.getFamilyName();
-            String personEmail = acct.getEmail();
-            String personId = acct.getId();
-            Uri personPhoto = acct.getPhotoUrl();
-        }
-
-        mBinding.twName.setText(acct.getDisplayName());
+        mBinding.twName.setText(currentUser.getDisplayName());
 
         mBinding.button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mGoogleSignInClient.signOut().addOnCompleteListener(MainActivity.this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        finish();
-                    }
-                });
+                FirebaseAuth.getInstance().signOut();
+                /*
+                 *  Return to LoginActivity after sign-out
+                 *  Don't use finish() cause of SplashScreen
+                 *  If loginActivity wasn't launch, stop the app
+                 */
+                Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(mIntent);
             }
         });
     }
