@@ -30,6 +30,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 public class LoginActivity extends AppCompatActivity {
