@@ -81,11 +81,13 @@ public class LoginActivity extends AppCompatActivity {
             public void onSuccess(LoginResult loginResult) {
                 Log.d("Facebook connection", "facebook:onSuccess:" + loginResult);
                 handleFacebookAccessToken(loginResult.getAccessToken());
+                setResult(RESULT_OK);
             }
 
             @Override
             public void onCancel() {
                 Log.d("Facebook connection:", "facebook:onCancel");
+                setResult(RESULT_CANCELED);
             }
 
             @Override
@@ -148,6 +150,8 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Facebook connection:", "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("Facebook connection:", "signInWithCredential:failure", task.getException());
