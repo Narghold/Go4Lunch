@@ -14,6 +14,7 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -29,6 +30,8 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -74,8 +77,30 @@ public class LoginActivity extends AppCompatActivity {
 
         //START FACEBOOK AUTH
         mCallbackManager = CallbackManager.Factory.create();
-        //LoginButton mLoginButton = (LoginButton) mBinding.btnLoginFacebook;
-        mBinding.loginButtonFb.setPermissions("email", "public_profile");
+        mBinding.btnLoginFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("email", "public_profile"));
+                LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        handleFacebookAccessToken(loginResult.getAccessToken());
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+
+                    @Override
+                    public void onError(@NotNull FacebookException e) {
+
+                    }
+                });
+            }
+        });
+
+        /*mBinding.loginButtonFb.setPermissions("email", "public_profile");
         mBinding.loginButtonFb.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -94,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onError(FacebookException error) {
                 Log.d("Facebook connection:", "facebook:onError", error);
             }
-        });
+        });*/
     }
 
     @Override
