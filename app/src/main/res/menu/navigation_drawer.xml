@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nd_your_lunch"
+        android:icon="@drawable/ic_fork_knife"
+        android:title="@string/nd_your_lunch" />
+    <item
+        android:id="@+id/nd_settings"
+        android:title="@string/nd_settings"
+        android:icon="@drawable/ic_settings"/>
+    <item
+        android:id="@+id/nd_logout"
+        android:title="@string/nd_logout"
+        android:icon="@drawable/ic_power"/>
+</menu>
