@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.dubois.yann.go4lunch.databinding.ActivityMainBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
         //Get the las account connected to app
         FirebaseAuth mMAuth = FirebaseAuth.getInstance();
         currentUser = mMAuth.getCurrentUser();
+
+        Glide.with(this).load(currentUser.getPhotoUrl()).into(mBinding.imageView);
 
         mBinding.twName.setText(currentUser.getDisplayName());
 
