@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/bn_map"
+        android:icon="@drawable/ic_map"
+        android:title="@string/bn_map" />
+    <item
+        android:id="@+id/bn_list"
+        android:icon="@drawable/ic_list"
+        android:title="@string/bn_list" />
+    <item
+        android:id="@+id/bn_workmates"
+        android:icon="@drawable/ic_group"
+        android:title="@string/bn_workmates" />
+</menu>

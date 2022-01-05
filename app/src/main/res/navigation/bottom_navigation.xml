@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_navigation"
+    app:startDestination="@id/bn_map">
+
+    <fragment
+        android:id="@+id/bn_map"
+        android:name="com.dubois.yann.go4lunch.MapFragment"
+        android:label="fragment_map"
+        tools:layout="@layout/fragment_map" />
+    <fragment
+        android:id="@+id/bn_list"
+        android:name="com.dubois.yann.go4lunch.ListFragment"
+        android:label="fragment_list"
+        tools:layout="@layout/fragment_list" />
+    <fragment
+        android:id="@+id/bn_workmates"
+        android:name="com.dubois.yann.go4lunch.WorkmateFragment"
+        android:label="fragment_workmate"
+        tools:layout="@layout/fragment_workmate" />
+</navigation>

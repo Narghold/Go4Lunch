@@ -19,4 +19,9 @@
     <string name="nd_your_lunch">Your lunch</string>
     <string name="nd_settings">Settings</string>
     <string name="nd_logout">Logout</string>
+
+    <!-- Bottom navigation -->
+    <string name="bn_map">Map View</string>
+    <string name="bn_list">List View</string>
+    <string name="bn_workmates">Workmates</string>
 </resources>

@@ -2,6 +2,9 @@ package com.dubois.yann.go4lunch;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -50,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //NavigationView
-        mBinding.navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        mBinding.navigationDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
@@ -75,13 +78,18 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Header Navigation Drawer
-        View mHeaderView = mBinding.navView.getHeaderView(0);
+        View mHeaderView = mBinding.navigationDrawer.getHeaderView(0);
         TextView hndName = mHeaderView.findViewById(R.id.hnd_name);
         TextView hndMail = mHeaderView.findViewById(R.id.hnd_mail);
         ImageView hndProfilePicture = mHeaderView.findViewById(R.id.hdn_profile_picture);
         hndName.setText(currentUser.getDisplayName());
         hndMail.setText(currentUser.getEmail());
         Glide.with(this).load(currentUser.getPhotoUrl()).circleCrop().into(hndProfilePicture);
-        
+
+
+        //Bottom navigation
+        NavHostFragment mNavHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fr_navigation);
+        NavController mNavController = mNavHostFragment.getNavController();
+        NavigationUI.setupWithNavController(mBinding.bottomNavigation, mNavController);
     }
 }
