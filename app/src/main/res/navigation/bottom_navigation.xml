@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bottom_navigation"
-    app:startDestination="@id/bn_map">
+    app:startDestination="@id/bn_list">
 
     <fragment
         android:id="@+id/bn_map"
-        android:name="com.dubois.yann.go4lunch.MapFragment"
+        android:name="com.dubois.yann.go4lunch.MapsFragment"
         android:label="fragment_map"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_maps" />
     <fragment
         android:id="@+id/bn_list"
         android:name="com.dubois.yann.go4lunch.ListFragment"
