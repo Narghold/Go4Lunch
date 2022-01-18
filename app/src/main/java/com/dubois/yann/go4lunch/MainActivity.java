@@ -2,20 +2,14 @@ package com.dubois.yann.go4lunch;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback;
-import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -26,7 +20,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.dubois.yann.go4lunch.databinding.ActivityMainBinding;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,10 +32,9 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks, OnRequestPermissionsResultCallback {
 
     ActivityMainBinding mBinding;
-
     private static final int RC_LOCATION_PERM = 122;
 
-    FirebaseUser currentUser;
+    FirebaseUser mCurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +43,12 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         View view = mBinding.getRoot();
         setContentView(view);
 
-
         //Ask for location permissions
         askLocationPermission();
 
         //Get the las account connected to app
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
+        mCurrentUser = mAuth.getCurrentUser();
 
         //AppBar
         setSupportActionBar(mBinding.topAppBar);
@@ -72,8 +63,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         mBinding.navigationDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
-                switch (id) {
+                switch (item.getItemId()) {
                     case R.id.nd_logout:
                         FirebaseAuth.getInstance().signOut();
                         /*
@@ -98,10 +88,9 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         TextView hndName = mHeaderView.findViewById(R.id.hnd_name);
         TextView hndMail = mHeaderView.findViewById(R.id.hnd_mail);
         ImageView hndProfilePicture = mHeaderView.findViewById(R.id.hdn_profile_picture);
-        hndName.setText(currentUser.getDisplayName());
-        hndMail.setText(currentUser.getEmail());
-        Glide.with(this).load(currentUser.getPhotoUrl()).circleCrop().into(hndProfilePicture);
-
+        hndName.setText(mCurrentUser.getDisplayName());
+        hndMail.setText(mCurrentUser.getEmail());
+        Glide.with(this).load(mCurrentUser.getPhotoUrl()).circleCrop().into(hndProfilePicture);
 
         //Bottom navigation
         NavHostFragment mNavHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fr_navigation);

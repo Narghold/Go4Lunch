@@ -6,6 +6,9 @@
     <string name="fb_login_protocol_scheme">fb489344649026288</string>
     <string name="facebook_client_token">2f88cc0ae8aac52ddc5531499232aaea</string>
 
+    <!-- CONTENT DESCRIPTION -->
+    <string name="profile_pic">Profile picture</string>
+
     <!-- TEXTS -->
     <!-- Login buttons -->
     <string name="btn_login_google">Login with Google</string>

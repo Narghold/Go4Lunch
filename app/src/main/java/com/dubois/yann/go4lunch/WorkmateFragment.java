@@ -1,37 +1,39 @@
 package com.dubois.yann.go4lunch;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link WorkmateFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class WorkmateFragment extends Fragment {
 
-    public WorkmateFragment() {
-        // Required empty public constructor
-    }
-
-    public static WorkmateFragment newInstance() {
-        return new WorkmateFragment();
-    }
+    private WorkmatesAdapter mWorkmatesAdapter;
+    private RecyclerView mWorkmatesRecycler;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_workmate, container, false);
+        View mView = inflater.inflate(R.layout.fragment_workmate, container, false);
+        Context mContext = mView.getContext();
+        mWorkmatesRecycler = mView.findViewById(R.id.rv_workmates);
+        mWorkmatesRecycler.setLayoutManager(new LinearLayoutManager(mContext , LinearLayoutManager.VERTICAL, false));
+        mWorkmatesRecycler.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        mWorkmatesAdapter  = new WorkmatesAdapter();
+        mWorkmatesRecycler.setAdapter(mWorkmatesAdapter);
+        return mView;
     }
 }
