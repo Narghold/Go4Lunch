@@ -3,6 +3,8 @@ package com.dubois.yann.go4lunch;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
@@ -34,12 +36,11 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks, ActivityCompat.OnRequestPermissionsResultCallback, LocationListener {
+public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks, OnRequestPermissionsResultCallback {
 
     ActivityMainBinding mBinding;
 
     private static final int RC_LOCATION_PERM = 122;
-    private LocationManager locationManager;
 
     FirebaseUser currentUser;
 
@@ -50,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         View view = mBinding.getRoot();
         setContentView(view);
 
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         //Ask for location permissions
         askLocationPermission();
@@ -119,9 +119,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     @SuppressLint("MissingPermission")
     @AfterPermissionGranted(RC_LOCATION_PERM)
     private void askLocationPermission() {
-        if (EasyPermissions.hasPermissions(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.ACCESS_FINE_LOCATION) || EasyPermissions.hasPermissions(this, Manifest.permission.ACCESS_COARSE_LOCATION)){
             Toast.makeText(this, "Location granted", Toast.LENGTH_LONG).show();
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, this::onLocationChanged);
         } else {
             EasyPermissions.requestPermissions(this, getString(R.string.rationale_rq_location), RC_LOCATION_PERM, Manifest.permission.ACCESS_FINE_LOCATION);
         }
@@ -136,14 +135,5 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
         Log.d("MapsFragment", "onPermissionsDenied:" + requestCode + ":" + perms.size());
         EasyPermissions.requestPermissions(this, getString(R.string.rationale_rq_location_second), RC_LOCATION_PERM, Manifest.permission.ACCESS_FINE_LOCATION);
-    }
-
-    @Override
-    public void onLocationChanged(@NonNull Location location) {
-        //No need to get location into a variable ?
-        double lat = location.getLatitude();
-        double lng = location.getLongitude();
-        //Stop location request
-        locationManager.removeUpdates(this::onLocationChanged);
     }
 }

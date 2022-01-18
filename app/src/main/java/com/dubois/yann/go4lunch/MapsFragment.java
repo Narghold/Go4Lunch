@@ -7,6 +7,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -35,18 +37,21 @@ import java.util.Objects;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MapsFragment extends Fragment implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
+public class MapsFragment extends Fragment implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback, LocationListener {
 
-    private GoogleMap mGoogleMap;
-    private FusedLocationProviderClient fusedLocationClient;
+    private LocationManager locationManager;
     private Location mLocation;
 
+    @SuppressLint("MissingPermission")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, this::onLocationChanged);
         return inflater.inflate(R.layout.fragment_maps, container, false);
+
     }
 
     @Override
@@ -57,16 +62,22 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Activi
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
-    }
+     }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        mGoogleMap = googleMap;
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            mGoogleMap.setMyLocationEnabled(true);
+        if (mLocation != null){
+            LatLng mLatLng = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 13));
         }
-        LatLng location = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+
     }
 
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+        mLocation = location;
+        if (mLocation != null){
+            locationManager.removeUpdates(this::onLocationChanged);
+        }
+    }
 }
