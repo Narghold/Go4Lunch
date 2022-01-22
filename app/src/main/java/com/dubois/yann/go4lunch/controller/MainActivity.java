@@ -1,4 +1,4 @@
-package com.dubois.yann.go4lunch;
+package com.dubois.yann.go4lunch.controller;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.dubois.yann.go4lunch.R;
 import com.dubois.yann.go4lunch.databinding.ActivityMainBinding;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;

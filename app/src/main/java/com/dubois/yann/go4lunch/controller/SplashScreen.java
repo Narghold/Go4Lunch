@@ -1,4 +1,4 @@
-package com.dubois.yann.go4lunch;
+package com.dubois.yann.go4lunch.controller;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,17 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.dubois.yann.go4lunch.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class SplashScreen extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.dubois.yann.go4lunch;
+package com.dubois.yann.go4lunch.controller;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,8 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.firebase.FirebaseApp;
+import com.dubois.yann.go4lunch.R;
 
 public class WorkmateFragment extends Fragment {
 

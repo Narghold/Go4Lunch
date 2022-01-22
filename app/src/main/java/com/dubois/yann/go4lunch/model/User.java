@@ -1,20 +1,21 @@
-package com.dubois.yann.go4lunch;
+package com.dubois.yann.go4lunch.model;
 
 public class User {
 
-    private String uid;
+    private String id;
     private String username;
     private String photoURL;
 
-    public User(String uid, String username, String photoURL) {
-        this.uid = uid;
+    //Constructor
+    public User(String id, String username, String photoURL) {
+        this.id = id;
         this.username = username;
         this.photoURL = photoURL;
     }
 
     //Getters
-    public String getUid() {
-        return uid;
+    public String getId() {
+        return id;
     }
 
     public String getUsername() {
@@ -26,8 +27,8 @@ public class User {
     }
 
     //Setters
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setUsername(String username) {
