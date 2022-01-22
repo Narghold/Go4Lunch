@@ -14,6 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.firebase.FirebaseApp;
+
 public class WorkmateFragment extends Fragment {
 
     private WorkmatesAdapter mWorkmatesAdapter;
@@ -31,9 +34,14 @@ public class WorkmateFragment extends Fragment {
         Context mContext = mView.getContext();
         mWorkmatesRecycler = mView.findViewById(R.id.rv_workmates);
         mWorkmatesRecycler.setLayoutManager(new LinearLayoutManager(mContext , LinearLayoutManager.VERTICAL, false));
-        mWorkmatesRecycler.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        mWorkmatesRecycler.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
         mWorkmatesAdapter  = new WorkmatesAdapter();
         mWorkmatesRecycler.setAdapter(mWorkmatesAdapter);
         return mView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
     }
 }
