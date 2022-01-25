@@ -96,27 +96,6 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         });
-
-        /*mBinding.loginButtonFb.setPermissions("email", "public_profile");
-        mBinding.loginButtonFb.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Log.d("Facebook connection", "facebook:onSuccess:" + loginResult);
-                handleFacebookAccessToken(loginResult.getAccessToken());
-                setResult(RESULT_OK);
-            }
-
-            @Override
-            public void onCancel() {
-                Log.d("Facebook connection:", "facebook:onCancel");
-                setResult(RESULT_CANCELED);
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Log.d("Facebook connection:", "facebook:onError", error);
-            }
-        });*/
     }
 
     @Override
