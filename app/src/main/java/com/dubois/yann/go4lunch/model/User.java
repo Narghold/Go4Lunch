@@ -13,6 +13,10 @@ public class User {
         this.photoURL = photoURL;
     }
 
+    //For database
+    public User(){
+    }
+
     //Getters
     public String getId() {
         return id;
@@ -37,5 +41,14 @@ public class User {
 
     public void setPhotoURL(String photoURL) {
         this.photoURL = photoURL;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", username='" + username + '\'' +
+                ", photoURL='" + photoURL + '\'' +
+                '}';
     }
 }
