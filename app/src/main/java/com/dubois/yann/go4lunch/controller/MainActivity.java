@@ -21,11 +21,17 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.dubois.yann.go4lunch.R;
 import com.dubois.yann.go4lunch.databinding.ActivityMainBinding;
+import com.dubois.yann.go4lunch.model.User;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
+import java.util.Objects;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -35,7 +41,10 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     ActivityMainBinding mBinding;
     private static final int RC_LOCATION_PERM = 122;
 
+    private final String USER_KEY = "user";
+
     FirebaseUser mCurrentUser;
+    FirebaseFirestore mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +56,13 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         //Ask for location permissions
         askLocationPermission();
 
-        //Get the las account connected to app
+        //Get the last account connected to app
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mCurrentUser = mAuth.getCurrentUser();
+
+        //Get database instance
+        mDatabase = FirebaseFirestore.getInstance();
+        addUserToDatabase();
 
         //AppBar
         setSupportActionBar(mBinding.topAppBar);
@@ -98,6 +111,12 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         assert mNavHostFragment != null;
         NavController mNavController = mNavHostFragment.getNavController();
         NavigationUI.setupWithNavController(mBinding.bottomNavigation, mNavController);
+    }
+
+    private void addUserToDatabase() {
+        User user = new User(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), Objects.requireNonNull(mCurrentUser.getPhotoUrl()).toString());
+        //If user already exists, update information
+        mDatabase.collection(USER_KEY).document(user.getId()).set(user);
     }
 
     @Override
