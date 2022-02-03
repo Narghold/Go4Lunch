@@ -55,9 +55,9 @@
             android:id="@+id/item_place_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textColor="@color/teal_700"
+            android:layout_marginTop="16dp"
             android:text="120m"
+            android:textColor="@color/teal_700"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
