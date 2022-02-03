@@ -12,17 +12,17 @@ import com.dubois.yann.go4lunch.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ListFragment#newInstance} factory method to
+ * Use the {@link PlacesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ListFragment extends Fragment {
+public class PlacesFragment extends Fragment {
 
-    public ListFragment() {
+    public PlacesFragment() {
         // Required empty public constructor
     }
 
-    public static ListFragment newInstance() {
-        return new ListFragment();
+    public static PlacesFragment newInstance() {
+        return new PlacesFragment();
     }
 
     @Override
@@ -34,6 +34,6 @@ public class ListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_list, container, false);
+        return inflater.inflate(R.layout.fragment_places, container, false);
     }
 }

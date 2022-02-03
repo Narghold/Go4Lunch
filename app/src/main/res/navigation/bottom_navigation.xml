@@ -12,9 +12,9 @@
         tools:layout="@layout/fragment_maps" />
     <fragment
         android:id="@+id/bn_list"
-        android:name="com.dubois.yann.go4lunch.controller.ListFragment"
+        android:name="com.dubois.yann.go4lunch.controller.PlacesFragment"
         android:label="fragment_list"
-        tools:layout="@layout/fragment_list" />
+        tools:layout="@layout/fragment_places" />
     <fragment
         android:id="@+id/bn_workmates"
         android:name="com.dubois.yann.go4lunch.controller.WorkmateFragment"

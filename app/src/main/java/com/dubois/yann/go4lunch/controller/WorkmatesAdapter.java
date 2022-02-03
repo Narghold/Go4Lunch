@@ -29,7 +29,7 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.Work
     Context mContext;
 
     //List of users
-    private List<User> mUserList;
+    private final List<User> mUserList;
 
     public static class WorkmatesViewHolder extends RecyclerView.ViewHolder {
 
