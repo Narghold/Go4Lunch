@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.dubois.yann.go4lunch.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -27,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
+import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback, LocationListener {
@@ -40,12 +42,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Activi
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         mLocationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
-        if (EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) || EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)){
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-        }
+        getLocation();
         return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -86,5 +87,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Activi
 
     }
 
-    //TODO::After permission granted
+    @SuppressLint("MissingPermission")
+    public void getLocation(){
+        if (EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) || EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)){
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        }
+    }
+
 }

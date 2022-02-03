@@ -36,7 +36,7 @@ import java.util.Objects;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks, OnRequestPermissionsResultCallback {
+public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding mBinding;
     private static final int RC_LOCATION_PERM = 122;
@@ -52,9 +52,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = mBinding.getRoot();
         setContentView(view);
-
-        //Ask for location permissions
-        askLocationPermission();
 
         //Get the last account connected to app
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -119,30 +116,4 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         mDatabase.collection(USER_KEY).document(user.getId()).set(user);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-    }
-
-    @SuppressLint("MissingPermission")
-    @AfterPermissionGranted(RC_LOCATION_PERM)
-    private void askLocationPermission() {
-        if (EasyPermissions.hasPermissions(this, Manifest.permission.ACCESS_FINE_LOCATION) || EasyPermissions.hasPermissions(this, Manifest.permission.ACCESS_COARSE_LOCATION)){
-            Toast.makeText(this, "Location granted", Toast.LENGTH_LONG).show();
-        } else {
-            EasyPermissions.requestPermissions(this, getString(R.string.rationale_rq_location), RC_LOCATION_PERM, Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-    }
-
-    @Override
-    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-        Log.d("MapsFragment", "onPermissionsGranted:" + requestCode + ":" + perms.size());
-    }
-
-    @Override
-    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-        Log.d("MapsFragment", "onPermissionsDenied:" + requestCode + ":" + perms.size());
-        EasyPermissions.requestPermissions(this, getString(R.string.rationale_rq_location_second), RC_LOCATION_PERM, Manifest.permission.ACCESS_FINE_LOCATION);
-    }
 }
