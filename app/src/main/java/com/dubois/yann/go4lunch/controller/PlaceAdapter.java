@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide;
 import com.dubois.yann.go4lunch.R;
 import com.dubois.yann.go4lunch.model.Restaurant;
 
-import java.util.ArrayList;
 import java.util.List;
 
 class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
@@ -38,11 +37,11 @@ class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull PlaceViewHolder holder, int position) {
         Restaurant itemRestaurant = mPlaceList.get(position);
-        Glide.with(mContext).load(itemRestaurant.getPhotoURL()).into(holder.mItemPhoto);
+        holder.mItemPhoto.setImageBitmap(itemRestaurant.getPhoto());
         holder.mItemName.setText(itemRestaurant.getName());
         holder.mItemDetail.setText(String.format("%s -- %s", itemRestaurant.getNationality(), itemRestaurant.getAddress()));
         holder.mItemDistance.setText(String.valueOf(itemRestaurant.getDistance()));
-        holder.mItemRating.setText(String.format("%s/5", itemRestaurant.getRating().toString()));
+        holder.mItemRating.setText(String.valueOf(itemRestaurant.getRating()));
     }
 
     @Override

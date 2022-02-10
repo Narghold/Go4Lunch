@@ -1,5 +1,7 @@
 package com.dubois.yann.go4lunch.model;
 
+import android.graphics.Bitmap;
+
 public class Restaurant {
 
     private String id;
@@ -7,16 +9,16 @@ public class Restaurant {
     private String address;
     private int distance;
     private String nationality;
-    private String photoURL;
+    private Bitmap photo;
     private Double rating;
 
-    public Restaurant(String id, String name, String address, int distance, String nationality, String photoURL, Double rating) {
+    public Restaurant(String id, String name, String address, int distance, String nationality, Bitmap photo, Double rating) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.distance = distance;
         this.nationality = nationality;
-        this.photoURL = photoURL;
+        this.photo = photo;
         this.rating = rating;
     }
 
@@ -60,12 +62,12 @@ public class Restaurant {
         this.nationality = nationality;
     }
 
-    public String getPhotoURL() {
-        return photoURL;
+    public Bitmap getPhoto() {
+        return photo;
     }
 
-    public void setPhotoURL(String photoURL) {
-        this.photoURL = photoURL;
+    public void setPhoto(Bitmap photo) {
+        this.photo = photo;
     }
 
     public Double getRating() {
@@ -84,7 +86,7 @@ public class Restaurant {
                 ", address='" + address + '\'' +
                 ", distance=" + distance +
                 ", nationality='" + nationality + '\'' +
-                ", photoURL='" + photoURL + '\'' +
+                ", photoURL='" + photo + '\'' +
                 ", rating=" + rating +
                 '}';
     }
