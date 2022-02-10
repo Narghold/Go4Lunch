@@ -1,10 +1,5 @@
 package com.dubois.yann.go4lunch.controller;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -17,16 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+
 import com.dubois.yann.go4lunch.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -35,6 +31,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Activi
 
     private LocationManager mLocationManager;
     private Location mLocation;
+
+    private static final int RC_LOCATION_PERM = 122;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        askLocationPermission();
+    }
 
     @SuppressLint("MissingPermission")
     @Override
@@ -91,6 +95,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Activi
     public void getLocation(){
         if (EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) || EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)){
             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    @AfterPermissionGranted(RC_LOCATION_PERM)
+    private void askLocationPermission() {
+        if (EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) || EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)){
+            Toast.makeText(requireContext(), "Location granted", Toast.LENGTH_LONG).show();
+            getLocation();
+        } else {
+            EasyPermissions.requestPermissions(this, getString(R.string.rationale_rq_location), RC_LOCATION_PERM, Manifest.permission.ACCESS_FINE_LOCATION);
         }
     }
 
