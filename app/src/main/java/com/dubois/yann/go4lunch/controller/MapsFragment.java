@@ -68,6 +68,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Activi
         }
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onLocationChanged(@NonNull Location location) {
         mLocation = location;

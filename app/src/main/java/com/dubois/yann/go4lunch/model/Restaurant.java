@@ -1,6 +1,6 @@
 package com.dubois.yann.go4lunch.model;
 
-class Place {
+public class Restaurant {
 
     private String id;
     private String name;
@@ -8,9 +8,9 @@ class Place {
     private int distance;
     private String nationality;
     private String photoURL;
-    private float rating;
+    private Double rating;
 
-    public Place(String id, String name, String address, int distance, String nationality, String photoURL, float rating) {
+    public Restaurant(String id, String name, String address, int distance, String nationality, String photoURL, Double rating) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -68,17 +68,17 @@ class Place {
         this.photoURL = photoURL;
     }
 
-    public float getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(float rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
     @Override
     public String toString() {
-        return "Place{" +
+        return "Restaurant{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +

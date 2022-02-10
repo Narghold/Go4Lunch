@@ -10,8 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.dubois.yann.go4lunch.R;
-import com.google.android.libraries.places.api.model.Place;
+import com.dubois.yann.go4lunch.model.Restaurant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
     Context mContext;
 
     //List of places
-    private final List<Place> mPlaceList = new ArrayList<>();
+    private final List<Restaurant> mPlaceList;
 
     @NonNull
     @Override
@@ -32,14 +33,21 @@ class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
         return new PlaceViewHolder(mView);
     }
 
+    public PlaceAdapter(List<Restaurant> placeList) { mPlaceList = placeList;}
+
     @Override
     public void onBindViewHolder(@NonNull PlaceViewHolder holder, int position) {
-
+        Restaurant itemRestaurant = mPlaceList.get(position);
+        Glide.with(mContext).load(itemRestaurant.getPhotoURL()).into(holder.mItemPhoto);
+        holder.mItemName.setText(itemRestaurant.getName());
+        holder.mItemDetail.setText(String.format("%s -- %s", itemRestaurant.getNationality(), itemRestaurant.getAddress()));
+        holder.mItemDistance.setText(String.valueOf(itemRestaurant.getDistance()));
+        holder.mItemRating.setText(String.format("%s/5", itemRestaurant.getRating().toString()));
     }
 
     @Override
     public int getItemCount() {
-        return 10;
+        return mPlaceList.size();
     }
 
     public static class PlaceViewHolder extends RecyclerView.ViewHolder{
