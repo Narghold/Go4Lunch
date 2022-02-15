@@ -81,12 +81,9 @@ public class PlacesFragment extends Fragment {
                         if (metadata != null){
                             final PhotoMetadata photoMetadata = metadata.get(0);
                             final FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata).build();
-                            mPlacesClient.fetchPhoto(photoRequest).addOnSuccessListener(fetchPhotoResponse -> {
-                                Bitmap mBitmap = fetchPhotoResponse.getBitmap();
-                                Restaurant restaurant = new Restaurant(place.getId(), place.getName(), place.getAddress(), 100, "French", mBitmap, place.getRating());
-                                mPlaceList.add(restaurant);
-                                Log.d("Place", restaurant.toString());
-                            });
+                            Restaurant restaurant = new Restaurant(place.getId(), place.getName(), place.getAddress(), 100, "French", photoMetadata, place.getRating());
+                            mPlaceList.add(restaurant);
+                            Log.d("Place", restaurant.toString());
                         }else {
                             Restaurant restaurant = new Restaurant(place.getId(), place.getName(), place.getAddress(), 100, "French", null, place.getRating());
                             mPlaceList.add(restaurant);
