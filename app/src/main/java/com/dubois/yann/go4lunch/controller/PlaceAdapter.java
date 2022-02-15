@@ -24,6 +24,7 @@ import com.google.android.libraries.places.api.net.FetchPhotoResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
@@ -35,7 +36,7 @@ class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
 
 
     //List of places
-    private final List<Restaurant> mPlaceList;
+    private List<Restaurant> mPlaceList;
 
     @NonNull
     @Override
@@ -46,7 +47,15 @@ class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
         return new PlaceViewHolder(mView);
     }
 
-    public PlaceAdapter(List<Restaurant> placeList) { mPlaceList = placeList;}
+    public PlaceAdapter(){
+        mPlaceList = new  ArrayList<>();
+    }
+
+    public void setData(List<Restaurant> dataList){
+        mPlaceList.clear();
+        mPlaceList.addAll(dataList);
+        notifyDataSetChanged();
+    }
 
     @Override
     public void onBindViewHolder(@NonNull PlaceViewHolder holder, int position) {
@@ -56,6 +65,8 @@ class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
         PlacesClient mPlacesClient = Places.createClient(mContext);
 
         Restaurant itemRestaurant = mPlaceList.get(position);
+
+        //Get place photo from photoMetadata field
         if(itemRestaurant.getPhoto() != null){
             final FetchPhotoRequest mPhotoRequest = FetchPhotoRequest.builder(itemRestaurant.getPhoto())
                     .setMaxHeight(200).setMaxWidth(200).build();
