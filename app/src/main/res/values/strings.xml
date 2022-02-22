@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Go4Lunch</string>
 
+    <!-- Google API -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyCNjV39mxq2G4P5K3ebshlgyoRq9IDyop4</string>
+    <string name="google_place_key" templateMergeStrategy="preserve" translatable="false">AIzaSyAYe9OJ2CySp8QtG531jnlfpmn-hJi5J38</string>
+
     <!-- Facebook -->
     <string name="facebook_application_id">489344649026288</string>
     <string name="fb_login_protocol_scheme">fb489344649026288</string>

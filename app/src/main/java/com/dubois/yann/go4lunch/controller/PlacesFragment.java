@@ -4,12 +4,16 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -39,12 +43,19 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class PlacesFragment extends Fragment {
 
     private PlaceAdapter mPlaceAdapter;
     private RecyclerView mPlaceRecycler;
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
