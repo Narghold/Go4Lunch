@@ -3,33 +3,51 @@ package com.dubois.yann.go4lunch.model;
 import android.graphics.Bitmap;
 
 import com.google.android.libraries.places.api.model.PhotoMetadata;
+import com.google.gson.annotations.SerializedName;
 
 public class Restaurant {
 
-    private String id;
+    private int id;
+    @SerializedName("place_id")
+    private String place_id;
+    @SerializedName("name")
     private String name;
+    @SerializedName("lat")
+    private Double latitude;
+    @SerializedName("lng")
+    private Double longitude;
+    @SerializedName("vicinity")
     private String address;
-    private int distance;
-    private String nationality;
-    private PhotoMetadata photo;
-    private Double rating;
+    @SerializedName("rating")
+    private float rating;
+    @SerializedName("photo_reference")
+    private String photoReference;
 
-    public Restaurant(String id, String name, String address, int distance, String nationality, PhotoMetadata photo, Double rating) {
+    public Restaurant(int id, String place_id, String name, Double latitude, Double longitude, String address, float rating, String photoReference) {
         this.id = id;
+        this.place_id = place_id;
         this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.address = address;
-        this.distance = distance;
-        this.nationality = nationality;
-        this.photo = photo;
         this.rating = rating;
+        this.photoReference = photoReference;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
+    }
+
+    public String getPlace_id() {
+        return place_id;
+    }
+
+    public void setPlace_id(String place_id) {
+        this.place_id = place_id;
     }
 
     public String getName() {
@@ -40,6 +58,22 @@ public class Restaurant {
         this.name = name;
     }
 
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
     public String getAddress() {
         return address;
     }
@@ -48,48 +82,33 @@ public class Restaurant {
         this.address = address;
     }
 
-    public int getDistance() {
-        return distance;
-    }
-
-    public void setDistance(int distance) {
-        this.distance = distance;
-    }
-
-    public String getNationality() {
-        return nationality;
-    }
-
-    public void setNationality(String nationality) {
-        this.nationality = nationality;
-    }
-
-    public PhotoMetadata getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(PhotoMetadata photo) {
-        this.photo = photo;
-    }
-
-    public Double getRating() {
+    public float getRating() {
         return rating;
     }
 
-    public void setRating(Double rating) {
+    public void setRating(float rating) {
         this.rating = rating;
+    }
+
+    public String getPhotoReference() {
+        return photoReference;
+    }
+
+    public void setPhotoReference(String photoReference) {
+        this.photoReference = photoReference;
     }
 
     @Override
     public String toString() {
         return "Restaurant{" +
-                "id='" + id + '\'' +
+                "id=" + id +
+                ", place_id='" + place_id + '\'' +
                 ", name='" + name + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
                 ", address='" + address + '\'' +
-                ", distance=" + distance +
-                ", nationality='" + nationality + '\'' +
-                ", PhotoMetadata='" + photo + '\'' +
                 ", rating=" + rating +
+                ", photoReference='" + photoReference + '\'' +
                 '}';
     }
 }
