@@ -1,9 +1,8 @@
 package com.dubois.yann.go4lunch.model;
 
-import android.graphics.Bitmap;
-
-import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class Restaurant {
 
@@ -12,26 +11,23 @@ public class Restaurant {
     private String place_id;
     @SerializedName("name")
     private String name;
-    @SerializedName("lat")
-    private Double latitude;
-    @SerializedName("lng")
-    private Double longitude;
+    @SerializedName("geometry")
+    private Geometry geometry;
     @SerializedName("vicinity")
     private String address;
     @SerializedName("rating")
     private float rating;
-    @SerializedName("photo_reference")
-    private String photoReference;
+    @SerializedName("photos")
+    public List<Photo> photos = null;
 
-    public Restaurant(int id, String place_id, String name, Double latitude, Double longitude, String address, float rating, String photoReference) {
+    public Restaurant(int id, String place_id, String name, Geometry geometry, String address, float rating, List<Photo> photos) {
         this.id = id;
         this.place_id = place_id;
         this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.geometry = geometry;
         this.address = address;
         this.rating = rating;
-        this.photoReference = photoReference;
+        this.photos = photos;
     }
 
     public int getId() {
@@ -58,20 +54,12 @@ public class Restaurant {
         this.name = name;
     }
 
-    public Double getLatitude() {
-        return latitude;
+    public Geometry getGeometry() {
+        return geometry;
     }
 
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
+    public void setGeometry(Geometry geometry) {
+        this.geometry = geometry;
     }
 
     public String getAddress() {
@@ -90,25 +78,11 @@ public class Restaurant {
         this.rating = rating;
     }
 
-    public String getPhotoReference() {
-        return photoReference;
+    public List<Photo> getPhotos() {
+        return photos;
     }
 
-    public void setPhotoReference(String photoReference) {
-        this.photoReference = photoReference;
-    }
-
-    @Override
-    public String toString() {
-        return "Restaurant{" +
-                "id=" + id +
-                ", place_id='" + place_id + '\'' +
-                ", name='" + name + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", address='" + address + '\'' +
-                ", rating=" + rating +
-                ", photoReference='" + photoReference + '\'' +
-                '}';
+    public void setPhotos(List<Photo> photos) {
+        this.photos = photos;
     }
 }

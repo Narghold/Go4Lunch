@@ -67,7 +67,7 @@ class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
         Restaurant itemRestaurant = mPlaceList.get(position);
 
         //Get place photo from photoMetadata field
-        if(itemRestaurant.getPhoto() != null){
+        /*if(itemRestaurant.getPhoto() != null){
             final FetchPhotoRequest mPhotoRequest = FetchPhotoRequest.builder(itemRestaurant.getPhoto())
                     .setMaxHeight(200).setMaxWidth(200).build();
             mPlacesClient.fetchPhoto(mPhotoRequest).addOnSuccessListener(fetchPhotoResponse -> {
@@ -84,12 +84,12 @@ class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
         holder.mItemName.setText(itemRestaurant.getName());
         holder.mItemDetail.setText(String.format("%s -- %s", itemRestaurant.getNationality(), itemRestaurant.getAddress()));
         holder.mItemDistance.setText(String.valueOf(itemRestaurant.getDistance()));
-        holder.mItemRating.setText(String.valueOf(itemRestaurant.getRating()));
+        holder.mItemRating.setText(String.valueOf(itemRestaurant.getRating()));*/
     }
 
     @Override
-    public int getItemCount() {
-        return mPlaceList.size();
+    public int getItemCount(){
+        return 0;
     }
 
     public static class PlaceViewHolder extends RecyclerView.ViewHolder{

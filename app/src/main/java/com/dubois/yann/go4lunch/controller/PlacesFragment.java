@@ -91,7 +91,7 @@ public class PlacesFragment extends Fragment {
                         if (place.getTypes().contains(Place.Type.RESTAURANT)){
                             //Photo Metadata
                             List<PhotoMetadata> metadata = place.getPhotoMetadatas();
-                            if (metadata != null){
+                            /*if (metadata != null){
                                 final PhotoMetadata photoMetadata = metadata.get(0);
 
                                 //Add the restaurant to the list
@@ -102,7 +102,7 @@ public class PlacesFragment extends Fragment {
                                 Restaurant restaurant = new Restaurant(place.getId(), place.getName(), place.getAddress(), 100, "French", null, place.getRating());
                                 mPlaceList.add(restaurant);
                                 Log.d("Place", restaurant.toString());
-                            }
+                            }*/
                         }
 
                     }

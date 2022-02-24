@@ -19,21 +19,29 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.dubois.yann.go4lunch.R;
+import com.dubois.yann.go4lunch.api.JsonApi;
 import com.dubois.yann.go4lunch.model.Restaurant;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.GET;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback, LocationListener {
 
@@ -120,30 +128,37 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Activi
     }
 
     private void getNearbyPlaces(Location location){
-        //Build url
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json" + //Url
-                        "?location=" + location.getLatitude() + "," + location.getLongitude() + //Location
-                        "&radius=2000" + //Radius
-                        "&type=restaurant" + //Type
-                        "&sensor=true" + //Sensor
-                        "&key=" + getString(R.string.google_place_key); //API Key
+        //Build parameters
+        String baseUrl = "https://maps.googleapis.com/maps/api/place/nearbysearch/";
+        String locationString = location.getLatitude() + "," + location.getLongitude();
+        String key = getString(R.string.google_place_key);
 
         //Initialize call
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(url).build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
         //Call API
-        client.newCall(request).enqueue(new Callback() {
+        JsonApi jsonApi = retrofit.create(JsonApi.class);
+        Call<List<Restaurant>> call = jsonApi.getRestaurant(locationString, key);
+
+        //Execute call
+        call.enqueue(new Callback<List<Restaurant>>() {
             @Override
-            public void onFailure(Request request, IOException e) {
-                e.printStackTrace();
+            public void onResponse(@NotNull Call<List<Restaurant>> call, @NotNull Response<List<Restaurant>> response) {
+                if(response.isSuccessful()){
+                    List<Restaurant> restaurantList = response.body();
+                    if (restaurantList != null){
+                        for (Restaurant restaurant : restaurantList){
+                            Log.d("Restaurants", restaurant.toString());
+                        }
+                    }
+                }
             }
             @Override
-            public void onResponse(Response response) throws IOException {
-                if (response.isSuccessful()){
-                    String placeJson = response.body().string();
-                    Log.d("Nearby search", placeJson);
-                }
+            public void onFailure(@NotNull Call<List<Restaurant>> call, Throwable t) {
+                Log.d("Null", t.getMessage());
             }
         });
     }
