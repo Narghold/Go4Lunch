@@ -166,7 +166,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Activi
                             markerOptions.position(new LatLng(lat, lng));
                             markerOptions.title(name);
                             //Add marker
-                            Marker marker = mMap.addMarker(markerOptions);
+                            mMap.addMarker(markerOptions);
                         }
                     }
                 }

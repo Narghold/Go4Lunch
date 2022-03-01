@@ -33,8 +33,6 @@ class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
 
     Context mContext;
 
-
-
     //List of places
     private List<Restaurant> mPlaceList;
 
@@ -60,36 +58,23 @@ class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull PlaceViewHolder holder, int position) {
 
-        //Initialize Place SDK
-        Places.initialize(mContext, mContext.getString(R.string.google_api_key));
-        PlacesClient mPlacesClient = Places.createClient(mContext);
-
         Restaurant itemRestaurant = mPlaceList.get(position);
-
-        //Get place photo from photoMetadata field
-        /*if(itemRestaurant.getPhoto() != null){
-            final FetchPhotoRequest mPhotoRequest = FetchPhotoRequest.builder(itemRestaurant.getPhoto())
-                    .setMaxHeight(200).setMaxWidth(200).build();
-            mPlacesClient.fetchPhoto(mPhotoRequest).addOnSuccessListener(fetchPhotoResponse -> {
-                Bitmap mBitmap = fetchPhotoResponse.getBitmap();
-                holder.mItemPhoto.setImageBitmap(mBitmap);
-            }).addOnFailureListener(exception -> {
-                if (exception instanceof ApiException) {
-                    final ApiException apiException = (ApiException) exception;
-                    Log.e(TAG, "Place not found: " + exception.getMessage());
-                    final int statusCode = apiException.getStatusCode();
-                }
-            });
-        }
         holder.mItemName.setText(itemRestaurant.getName());
-        holder.mItemDetail.setText(String.format("%s -- %s", itemRestaurant.getNationality(), itemRestaurant.getAddress()));
-        holder.mItemDistance.setText(String.valueOf(itemRestaurant.getDistance()));
-        holder.mItemRating.setText(String.valueOf(itemRestaurant.getRating()));*/
+        holder.mItemRating.setText(String.valueOf(itemRestaurant.getRating()));
+        holder.mItemDistance.setText("100m");
+        holder.mItemDetail.setText(itemRestaurant.getAddress());
+
+        //Get image
+        /*String url = "https://maps.googleapis.com/maps/api/place/photo" //Base url
+                + "?key=" + getClass().getResource(String.valueOf(R.string.google_place_key)) //API Key
+                + "&photo_reference" + itemRestaurant.getPhotos().get(0).getPhotoReference()  //Photo reference
+                + "&maxwidth=200";
+        Glide.with(mContext).load(url).into(holder.mItemPhoto);*/
     }
 
     @Override
     public int getItemCount(){
-        return 0;
+        return mPlaceList.size();
     }
 
     public static class PlaceViewHolder extends RecyclerView.ViewHolder{
