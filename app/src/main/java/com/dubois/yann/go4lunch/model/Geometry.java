@@ -7,6 +7,14 @@ public class Geometry {
     @SerializedName("location")
     Location location;
 
+    //Empty constructor for serialization
+    public Geometry() {}
+
+    //Constructor
+    public Geometry(Location location) {
+        this.location = location;
+    }
+
     public Location getLocation() {
         return location;
     }

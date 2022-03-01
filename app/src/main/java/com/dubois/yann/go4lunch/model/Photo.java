@@ -15,6 +15,18 @@ public class Photo {
     @SerializedName("width")
     public Integer width;
 
+    //Empty constructor for serialization
+    public Photo() {
+    }
+
+    //Constructor
+    public Photo(Integer height, List<String> htmlAttributions, String photoReference, Integer width) {
+        this.height = height;
+        this.htmlAttributions = htmlAttributions;
+        this.photoReference = photoReference;
+        this.width = width;
+    }
+
     public Integer getHeight() {
         return height;
     }

@@ -9,6 +9,15 @@ public class Location {
     @SerializedName("lng")
     private Double lng;
 
+    //Empty constructor for serialization
+    public Location() {}
+
+    //Constructor
+    public Location(Double lat, Double lng) {
+        this.lat = lat;
+        this.lng = lng;
+    }
+
     public Double getLat() {
         return lat;
     }

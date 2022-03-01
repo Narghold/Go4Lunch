@@ -21,11 +21,14 @@ import androidx.fragment.app.Fragment;
 import com.dubois.yann.go4lunch.R;
 import com.dubois.yann.go4lunch.api.JsonApi;
 import com.dubois.yann.go4lunch.model.Restaurant;
+import com.dubois.yann.go4lunch.model.Result;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 
@@ -47,6 +50,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Activi
 
     private LocationManager mLocationManager;
     private Location mLocation;
+    private GoogleMap mMap;
 
     private static final int RC_LOCATION_PERM = 122;
 
@@ -79,8 +83,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Activi
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         if (mLocation != null){
+            mMap = googleMap;
             LatLng mLatLng = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 13));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 14));
         }
     }
 
@@ -141,23 +146,33 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Activi
 
         //Call API
         JsonApi jsonApi = retrofit.create(JsonApi.class);
-        Call<List<Restaurant>> call = jsonApi.getRestaurant(locationString, key);
+        Call<Result> call = jsonApi.getRestaurant(locationString, key);
 
         //Execute call
-        call.enqueue(new Callback<List<Restaurant>>() {
+        call.enqueue(new Callback<Result>() {
             @Override
-            public void onResponse(@NotNull Call<List<Restaurant>> call, @NotNull Response<List<Restaurant>> response) {
+            public void onResponse(@NotNull Call<Result> call, @NotNull Response<Result> response) {
                 if(response.isSuccessful()){
-                    List<Restaurant> restaurantList = response.body();
-                    if (restaurantList != null){
+                    Result result = response.body();
+                    if (result != null){
+                        List<Restaurant> restaurantList = result.getRestaurantList();
                         for (Restaurant restaurant : restaurantList){
-                            Log.d("Restaurants", restaurant.toString());
+                            //Get info for marker
+                            Double lat = restaurant.getGeometry().getLocation().getLat();
+                            Double lng = restaurant.getGeometry().getLocation().getLng();
+                            String name = restaurant.getName();
+                            //Initialize marker
+                            MarkerOptions markerOptions = new MarkerOptions();
+                            markerOptions.position(new LatLng(lat, lng));
+                            markerOptions.title(name);
+                            //Add marker
+                            Marker marker = mMap.addMarker(markerOptions);
                         }
                     }
                 }
             }
             @Override
-            public void onFailure(@NotNull Call<List<Restaurant>> call, Throwable t) {
+            public void onFailure(@NotNull Call<Result> call, Throwable t) {
                 Log.d("Null", t.getMessage());
             }
         });

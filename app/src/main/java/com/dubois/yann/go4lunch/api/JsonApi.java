@@ -3,6 +3,7 @@ package com.dubois.yann.go4lunch.api;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dubois.yann.go4lunch.model.Restaurant;
+import com.dubois.yann.go4lunch.model.Result;
 
 import java.util.List;
 
@@ -14,5 +15,5 @@ public interface JsonApi {
 
     //Sensor & Type & Radius(in meters)
     @GET("json?sensor=true&type=restaurant&radius=2000")
-    Call<List<Restaurant>> getRestaurant(@Query("location") String location, @Query("key") String key);
+    Call<Result> getRestaurant(@Query("location") String location, @Query("key") String key);
 }
