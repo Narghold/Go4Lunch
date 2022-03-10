@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,7 +18,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.dubois.yann.go4lunch.R;
-import com.dubois.yann.go4lunch.api.JsonApi;
+import com.dubois.yann.go4lunch.api.PlaceRepository;
 import com.dubois.yann.go4lunch.model.Restaurant;
 import com.dubois.yann.go4lunch.model.Result;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -27,14 +26,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -44,7 +39,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.GET;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback, LocationListener {
 
@@ -125,7 +119,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Activi
     @AfterPermissionGranted(RC_LOCATION_PERM)
     private void askLocationPermission() {
         if (EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) || EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)){
-            Toast.makeText(requireContext(), "Location granted", Toast.LENGTH_LONG).show();
             getLocation();
         } else {
             EasyPermissions.requestPermissions(this, getString(R.string.rationale_rq_location), RC_LOCATION_PERM, Manifest.permission.ACCESS_FINE_LOCATION);
@@ -145,8 +138,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Activi
                 .build();
 
         //Call API
-        JsonApi jsonApi = retrofit.create(JsonApi.class);
-        Call<Result> call = jsonApi.getRestaurant(locationString, key);
+        PlaceRepository mPlaceRepository = retrofit.create(PlaceRepository.class);
+        Call<Result> call = mPlaceRepository.getRestaurant(locationString, key);
 
         //Execute call
         call.enqueue(new Callback<Result>() {

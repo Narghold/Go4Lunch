@@ -12,6 +12,13 @@
 
     <!-- CONTENT DESCRIPTION -->
     <string name="profile_pic">Profile picture</string>
+    <string name="restaurant_pic">Restaurant picture</string>
+    <string name="fab_choice">Restaurant choice</string>
+    <string name="call_pic">Call picture</string>
+    <string name="like_pic">Like picture</string>
+
+    <!-- URLs -->
+    <string name="url_nearby_search">https://maps.googleapis.com/maps/api/place/nearbysearch/</string>
 
     <!-- TEXTS -->
     <!-- Login buttons -->
@@ -32,7 +39,17 @@
     <string name="bn_list">List View</string>
     <string name="bn_workmates">Workmates</string>
 
+    <!-- Restaurant details buttons -->
+    <string name="btn_call">Call</string>
+    <string name="btn_like">Like</string>
+    <string name="btn_website">Website</string>
+
     <!-- Location request -->
     <string name="rationale_rq_location">This app needs access to your location.</string>
     <string name="rationale_rq_location_second">This app needs access to your location to work properly.</string>
+
+    <!-- Opening hours -->
+    <string name="open_now">Open now</string>
+    <string name="close_now">Close now</string>
+
 </resources>

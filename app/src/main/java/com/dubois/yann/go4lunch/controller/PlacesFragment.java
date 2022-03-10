@@ -3,17 +3,14 @@ package com.dubois.yann.go4lunch.controller;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -21,32 +18,15 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.dubois.yann.go4lunch.Go4Lunch;
 import com.dubois.yann.go4lunch.R;
-import com.dubois.yann.go4lunch.api.JsonApi;
+import com.dubois.yann.go4lunch.api.PlaceRepository;
 import com.dubois.yann.go4lunch.model.Restaurant;
 import com.dubois.yann.go4lunch.model.Result;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.LocationRestriction;
-import com.google.android.libraries.places.api.model.PhotoMetadata;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.PlaceLikelihood;
-import com.google.android.libraries.places.api.net.FetchPhotoRequest;
-import com.google.android.libraries.places.api.net.FetchPhotoResponse;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
-import com.google.android.libraries.places.api.net.PlacesClient;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -126,7 +106,6 @@ public class PlacesFragment extends Fragment implements LocationListener{
     @AfterPermissionGranted(RC_LOCATION_PERM)
     private void askLocationPermission() {
         if (EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) || EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)){
-            Toast.makeText(requireContext(), "Location granted", Toast.LENGTH_LONG).show();
             getLocation();
         } else {
             EasyPermissions.requestPermissions(this, getString(R.string.rationale_rq_location), RC_LOCATION_PERM, Manifest.permission.ACCESS_FINE_LOCATION);
@@ -142,19 +121,11 @@ public class PlacesFragment extends Fragment implements LocationListener{
 
     private void getNearbyPlaces(Location location){
         //Build parameters
-        String baseUrl = "https://maps.googleapis.com/maps/api/place/nearbysearch/";
         String locationString = location.getLatitude() + "," + location.getLongitude();
         String key = getString(R.string.google_place_key);
 
-        //Initialize call
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
         //Call API
-        JsonApi jsonApi = retrofit.create(JsonApi.class);
-        Call<Result> call = jsonApi.getRestaurant(locationString, key);
+        Call<Result> call = Go4Lunch.createRetrofitClient().getRestaurant(locationString, key);
 
         //Execute call
         call.enqueue(new Callback<Result>() {

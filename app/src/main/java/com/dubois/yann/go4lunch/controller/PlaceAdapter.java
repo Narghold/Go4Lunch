@@ -1,8 +1,8 @@
 package com.dubois.yann.go4lunch.controller;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.util.Log;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,24 +10,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.dubois.yann.go4lunch.R;
 import com.dubois.yann.go4lunch.model.Restaurant;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.net.FetchPhotoRequest;
-import com.google.android.libraries.places.api.net.FetchPhotoResponse;
-import com.google.android.libraries.places.api.net.PlacesClient;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.content.ContentValues.TAG;
 
 class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
 
@@ -64,12 +55,36 @@ class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
         holder.mItemDistance.setText("100m");
         holder.mItemDetail.setText(itemRestaurant.getAddress());
 
-        //Get image
-        /*String url = "https://maps.googleapis.com/maps/api/place/photo" //Base url
-                + "?key=" + getClass().getResource(String.valueOf(R.string.google_place_key)) //API Key
-                + "&photo_reference" + itemRestaurant.getPhotos().get(0).getPhotoReference()  //Photo reference
-                + "&maxwidth=200";
-        Glide.with(mContext).load(url).into(holder.mItemPhoto);*/
+        /*Opening hours
+        if (itemRestaurant.getOpeningHour().getOpenNow()){*/
+            holder.mItemHour.setText(mContext.getText(R.string.open_now));
+        /*}else{
+            holder.mItemHour.setText(mContext.getText(R.string.close_now));
+        }*/
+
+        //Set image
+        if (itemRestaurant.getPhotos() != null){
+            //Get image from Place
+            String url = "https://maps.googleapis.com/maps/api/place/photo" //Base url
+                    + "?maxwidth=200"
+                    + "&photo_reference=" + itemRestaurant.getPhotos().get(0).getPhotoReference()  //Photo reference
+                    + "&key=" + mContext.getString(R.string.google_place_key);//API Key;
+            Glide.with(mContext).load(url).into(holder.mItemPhoto);
+        }else {
+            //Set no image icon
+            Glide.with(mContext).load(R.drawable.ic_image_not_supported).into(holder.mItemPhoto);
+        }
+
+        holder.mItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent detailActivity = new Intent(view.getContext(), PlaceDetailsActivity.class);
+                Bundle restaurantInformation = new Bundle();
+                restaurantInformation.putString("place_id", itemRestaurant.getPlace_id());
+                detailActivity.putExtras(restaurantInformation);
+                view.getContext().startActivity(detailActivity);
+            }
+        });
     }
 
     @Override
@@ -84,6 +99,8 @@ class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
         TextView mItemDistance;
         TextView mItemRating;
         ImageView mItemPhoto;
+        TextView mItemHour;
+        ConstraintLayout mItem;
 
         public PlaceViewHolder(@NonNull View view) {
             super(view);
@@ -92,6 +109,8 @@ class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
             mItemDistance = view.findViewById(R.id.item_place_distance);
             mItemRating = view.findViewById(R.id.item_place_rating);
             mItemPhoto = view.findViewById(R.id.item_place_img);
+            mItemHour = view.findViewById(R.id.item_place_hour);
+            mItem = view.findViewById(R.id.item_list);
         }
     }
 }
