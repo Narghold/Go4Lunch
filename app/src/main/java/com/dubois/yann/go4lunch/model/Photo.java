@@ -1,46 +1,24 @@
 package com.dubois.yann.go4lunch.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class Photo {
+public class Photo implements Parcelable {
 
-    @SerializedName("height")
-    public Integer height;
-    @SerializedName("html_attributions")
-    public List<String> htmlAttributions = null;
     @SerializedName("photo_reference")
     public String photoReference;
-    @SerializedName("width")
-    public Integer width;
 
     //Empty constructor for serialization
     public Photo() {
     }
 
     //Constructor
-    public Photo(Integer height, List<String> htmlAttributions, String photoReference, Integer width) {
-        this.height = height;
-        this.htmlAttributions = htmlAttributions;
+    public Photo(String photoReference) {
         this.photoReference = photoReference;
-        this.width = width;
-    }
-
-    public Integer getHeight() {
-        return height;
-    }
-
-    public void setHeight(Integer height) {
-        this.height = height;
-    }
-
-    public List<String> getHtmlAttributions() {
-        return htmlAttributions;
-    }
-
-    public void setHtmlAttributions(List<String> htmlAttributions) {
-        this.htmlAttributions = htmlAttributions;
     }
 
     public String getPhotoReference() {
@@ -51,11 +29,36 @@ public class Photo {
         this.photoReference = photoReference;
     }
 
-    public Integer getWidth() {
-        return width;
+
+    //Parcelable
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setWidth(Integer width) {
-        this.width = width;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.photoReference);
     }
+
+    public void readFromParcel(Parcel source) {
+        this.photoReference = source.readString();
+    }
+
+    protected Photo(Parcel in) {
+        this.photoReference = in.readString();
+    }
+
+    public static final Parcelable.Creator<Photo> CREATOR = new Parcelable.Creator<Photo>() {
+        @Override
+        public Photo createFromParcel(Parcel source) {
+            return new Photo(source);
+        }
+
+        @Override
+        public Photo[] newArray(int size) {
+            return new Photo[size];
+        }
+    };
 }

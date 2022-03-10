@@ -51,5 +51,6 @@
     <!-- Opening hours -->
     <string name="open_now">Open now</string>
     <string name="close_now">Close now</string>
+    <string name="no_opening_hours">No informations</string>
 
 </resources>

@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.dubois.yann.go4lunch.R;
 import com.dubois.yann.go4lunch.databinding.ActivityPlaceDetailsBinding;
+import com.dubois.yann.go4lunch.model.Restaurant;
 
 public class PlaceDetailsActivity extends AppCompatActivity {
 
@@ -21,9 +22,20 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
         //Get bundle's information
         Bundle restaurantInformation = getIntent().getExtras();
-        String placeId = restaurantInformation.getString("place_id");
+        Restaurant restaurant = restaurantInformation.getParcelable("restaurant");
 
         //Set place_id into name TV
-        mBinding.tvName.setText(placeId);
+        mBinding.tvName.setText(restaurant.getName());
+        mBinding.tvAddress.setText(restaurant.getAddress());
+        //Opening hours
+        if (restaurant.getOpeningHour() != null){
+            if (restaurant.getOpeningHour().getOpenNow()){
+                mBinding.tvOpeningHours.setText(getText(R.string.open_now));
+            }else{
+                mBinding.tvOpeningHours.setText(getText(R.string.close_now));
+            }
+        }else {
+            mBinding.tvOpeningHours.setText(getText(R.string.no_opening_hours));
+        }
     }
 }

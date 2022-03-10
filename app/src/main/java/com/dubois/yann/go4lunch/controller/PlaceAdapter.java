@@ -55,12 +55,17 @@ class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
         holder.mItemDistance.setText("100m");
         holder.mItemDetail.setText(itemRestaurant.getAddress());
 
-        /*Opening hours
-        if (itemRestaurant.getOpeningHour().getOpenNow()){*/
-            holder.mItemHour.setText(mContext.getText(R.string.open_now));
-        /*}else{
-            holder.mItemHour.setText(mContext.getText(R.string.close_now));
-        }*/
+        //Opening hours
+        if (itemRestaurant.getOpeningHour() != null){
+            if (itemRestaurant.getOpeningHour().getOpenNow()){
+                holder.mItemHour.setText(mContext.getText(R.string.open_now));
+            }else{
+                holder.mItemHour.setText(mContext.getText(R.string.close_now));
+            }
+        }else {
+            holder.mItemHour.setText(mContext.getText(R.string.no_opening_hours));
+        }
+
 
         //Set image
         if (itemRestaurant.getPhotos() != null){
@@ -80,7 +85,7 @@ class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
             public void onClick(View view) {
                 Intent detailActivity = new Intent(view.getContext(), PlaceDetailsActivity.class);
                 Bundle restaurantInformation = new Bundle();
-                restaurantInformation.putString("place_id", itemRestaurant.getPlace_id());
+                restaurantInformation.putParcelable("restaurant", itemRestaurant);
                 detailActivity.putExtras(restaurantInformation);
                 view.getContext().startActivity(detailActivity);
             }

@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="@string/url_nearby_search"
+            tools:text="@string/url_nearby_search"
             android:textColor="@color/black"
             android:textSize="17sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -73,7 +73,7 @@
             android:textSize="17sp"
             android:textStyle="italic"
             android:textColor="@color/black"
-            android:text="@string/open_now"
+            tools:text="@string/open_now"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_address" />
