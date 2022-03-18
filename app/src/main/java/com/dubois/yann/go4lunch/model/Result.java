@@ -10,6 +10,8 @@ public class Result {
     public List<Object> htmlAttributions = null;
     @SerializedName("next_page_token")
     public String nextPageToken;
+    @SerializedName("result")
+    public RestaurantDetails restaurantDetails;
     @SerializedName("results")
     public List<Restaurant> restaurantList = null;
     @SerializedName("status")
@@ -19,9 +21,10 @@ public class Result {
     public Result() {}
 
     //Constructor
-    public Result(List<Object> htmlAttributions, String nextPageToken, List<Restaurant> restaurantList, String status) {
+    public Result(List<Object> htmlAttributions, String nextPageToken, RestaurantDetails restaurantDetails, List<Restaurant> restaurantList, String status) {
         this.htmlAttributions = htmlAttributions;
         this.nextPageToken = nextPageToken;
+        this.restaurantDetails = restaurantDetails;
         this.restaurantList = restaurantList;
         this.status = status;
     }
@@ -57,5 +60,13 @@ public class Result {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public RestaurantDetails getRestaurantDetails() {
+        return restaurantDetails;
+    }
+
+    public void setRestaurantDetails(RestaurantDetails restaurantDetails) {
+        this.restaurantDetails = restaurantDetails;
     }
 }

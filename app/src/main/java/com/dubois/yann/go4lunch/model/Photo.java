@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class Photo implements Parcelable {
+public class Photo {
 
     @SerializedName("photo_reference")
     public String photoReference;
@@ -29,36 +29,4 @@ public class Photo implements Parcelable {
         this.photoReference = photoReference;
     }
 
-
-    //Parcelable
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.photoReference);
-    }
-
-    public void readFromParcel(Parcel source) {
-        this.photoReference = source.readString();
-    }
-
-    protected Photo(Parcel in) {
-        this.photoReference = in.readString();
-    }
-
-    public static final Parcelable.Creator<Photo> CREATOR = new Parcelable.Creator<Photo>() {
-        @Override
-        public Photo createFromParcel(Parcel source) {
-            return new Photo(source);
-        }
-
-        @Override
-        public Photo[] newArray(int size) {
-            return new Photo[size];
-        }
-    };
 }

@@ -13,6 +13,6 @@ public interface PlaceRepository {
     Call<Result> getRestaurant(@Query("location") String location, @Query("key") String key);
 
     //Place Details
-    @GET("json?fields=name,vicinity,rating,website")
+    @GET("json?fields=name,vicinity,rating,website,formatted_phone_number,photos,opening_hours")
     Call<Result> getPlaceInformation(@Query("place_id") String place_id, @Query("key") String key);
 }

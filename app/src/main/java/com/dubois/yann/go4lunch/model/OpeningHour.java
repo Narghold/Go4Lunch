@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class OpeningHour implements Parcelable {
+public class OpeningHour{
 
     @SerializedName("open_now")
     private boolean openNow;
@@ -38,38 +38,4 @@ public class OpeningHour implements Parcelable {
         this.weekdayText = weekdayText;
     }
 
-    //Parcelable
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeByte(this.openNow ? (byte) 1 : (byte) 0);
-        dest.writeStringList(this.weekdayText);
-    }
-
-    public void readFromParcel(Parcel source) {
-        this.openNow = source.readByte() != 0;
-        this.weekdayText = source.createStringArrayList();
-    }
-
-    protected OpeningHour(Parcel in) {
-        this.openNow = in.readByte() != 0;
-        this.weekdayText = in.createStringArrayList();
-    }
-
-    public static final Parcelable.Creator<OpeningHour> CREATOR = new Parcelable.Creator<OpeningHour>() {
-        @Override
-        public OpeningHour createFromParcel(Parcel source) {
-            return new OpeningHour(source);
-        }
-
-        @Override
-        public OpeningHour[] newArray(int size) {
-            return new OpeningHour[size];
-        }
-    };
 }

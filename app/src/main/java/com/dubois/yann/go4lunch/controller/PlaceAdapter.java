@@ -85,8 +85,10 @@ class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
             public void onClick(View view) {
                 Intent detailActivity = new Intent(view.getContext(), PlaceDetailsActivity.class);
                 Bundle restaurantInformation = new Bundle();
-                restaurantInformation.putParcelable("restaurant", itemRestaurant);
+                //restaurantInformation.putParcelable("restaurant", itemRestaurant);
+                restaurantInformation.putString("place_id", itemRestaurant.getPlace_id());
                 detailActivity.putExtras(restaurantInformation);
+
                 view.getContext().startActivity(detailActivity);
             }
         });
