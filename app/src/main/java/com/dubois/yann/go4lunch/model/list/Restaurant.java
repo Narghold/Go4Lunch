@@ -1,11 +1,10 @@
-package com.dubois.yann.go4lunch.model;
+package com.dubois.yann.go4lunch.model.list;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
+import com.dubois.yann.go4lunch.model.Geometry;
+import com.dubois.yann.go4lunch.model.OpeningHour;
+import com.dubois.yann.go4lunch.model.Photo;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Restaurant {

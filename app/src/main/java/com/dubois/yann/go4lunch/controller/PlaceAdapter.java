@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.dubois.yann.go4lunch.R;
-import com.dubois.yann.go4lunch.model.Restaurant;
+import com.dubois.yann.go4lunch.model.list.Restaurant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +85,6 @@ class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
             public void onClick(View view) {
                 Intent detailActivity = new Intent(view.getContext(), PlaceDetailsActivity.class);
                 Bundle restaurantInformation = new Bundle();
-                //restaurantInformation.putParcelable("restaurant", itemRestaurant);
                 restaurantInformation.putString("place_id", itemRestaurant.getPlace_id());
                 detailActivity.putExtras(restaurantInformation);
 

@@ -19,8 +19,8 @@ import androidx.fragment.app.Fragment;
 
 import com.dubois.yann.go4lunch.R;
 import com.dubois.yann.go4lunch.api.PlaceRepository;
-import com.dubois.yann.go4lunch.model.Restaurant;
-import com.dubois.yann.go4lunch.model.Result;
+import com.dubois.yann.go4lunch.model.list.Restaurant;
+import com.dubois.yann.go4lunch.model.list.ResultList;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -139,14 +139,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Activi
 
         //Call API
         PlaceRepository mPlaceRepository = retrofit.create(PlaceRepository.class);
-        Call<Result> call = mPlaceRepository.getRestaurant(locationString, key);
+        Call<ResultList> call = mPlaceRepository.getRestaurant(locationString, key);
 
         //Execute call
-        call.enqueue(new Callback<Result>() {
+        call.enqueue(new Callback<ResultList>() {
             @Override
-            public void onResponse(@NotNull Call<Result> call, @NotNull Response<Result> response) {
+            public void onResponse(@NotNull Call<ResultList> call, @NotNull Response<ResultList> response) {
                 if(response.isSuccessful()){
-                    Result result = response.body();
+                    ResultList result = response.body();
                     if (result != null){
                         List<Restaurant> restaurantList = result.getRestaurantList();
                         for (Restaurant restaurant : restaurantList){
@@ -165,7 +165,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Activi
                 }
             }
             @Override
-            public void onFailure(@NotNull Call<Result> call, Throwable t) {
+            public void onFailure(@NotNull Call<ResultList> call, Throwable t) {
                 Log.d("Null", t.getMessage());
             }
         });

@@ -20,9 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dubois.yann.go4lunch.Go4Lunch;
 import com.dubois.yann.go4lunch.R;
-import com.dubois.yann.go4lunch.api.PlaceRepository;
-import com.dubois.yann.go4lunch.model.Restaurant;
-import com.dubois.yann.go4lunch.model.Result;
+import com.dubois.yann.go4lunch.model.list.Restaurant;
+import com.dubois.yann.go4lunch.model.list.ResultList;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -34,8 +33,6 @@ import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PlacesFragment extends Fragment implements LocationListener{
 
@@ -125,21 +122,21 @@ public class PlacesFragment extends Fragment implements LocationListener{
         String key = getString(R.string.google_place_key);
 
         //Call API
-        Call<Result> call = Go4Lunch.createRetrofitClient().getRestaurant(locationString, key);
+        Call<ResultList> call = Go4Lunch.createRetrofitClient().getRestaurant(locationString, key);
 
         //Execute call
-        call.enqueue(new Callback<Result>() {
+        call.enqueue(new Callback<ResultList>() {
             @Override
-            public void onResponse(@NotNull Call<Result> call, @NotNull Response<Result> response) {
+            public void onResponse(@NotNull Call<ResultList> call, @NotNull Response<ResultList> response) {
                 if(response.isSuccessful()){
-                    Result result = response.body();
+                    ResultList result = response.body();
                     if (result != null){
                         mRestaurantList = result.getRestaurantList();
                     }
                 }
             }
             @Override
-            public void onFailure(@NotNull Call<Result> call, Throwable t) {
+            public void onFailure(@NotNull Call<ResultList> call, Throwable t) {
                 Log.d("Null", t.getMessage());
             }
         });

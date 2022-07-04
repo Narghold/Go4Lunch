@@ -1,6 +1,7 @@
 package com.dubois.yann.go4lunch.api;
 
-import com.dubois.yann.go4lunch.model.Result;
+import com.dubois.yann.go4lunch.model.details.ResultDetails;
+import com.dubois.yann.go4lunch.model.list.ResultList;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -10,9 +11,9 @@ public interface PlaceRepository {
 
     //Sensor & Type & Radius(in meters)
     @GET("json?sensor=true&type=restaurant&radius=2000")
-    Call<Result> getRestaurant(@Query("location") String location, @Query("key") String key);
+    Call<ResultList> getRestaurant(@Query("location") String location, @Query("key") String key);
 
     //Place Details
     @GET("json?fields=name,vicinity,rating,website,formatted_phone_number,photos,opening_hours")
-    Call<Result> getPlaceInformation(@Query("place_id") String place_id, @Query("key") String key);
+    Call<ResultDetails> getPlaceInformation(@Query("place_id") String place_id, @Query("key") String key);
 }

@@ -7,17 +7,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.dubois.yann.go4lunch.Go4Lunch;
 import com.dubois.yann.go4lunch.R;
 import com.dubois.yann.go4lunch.databinding.ActivityPlaceDetailsBinding;
-import com.dubois.yann.go4lunch.model.Restaurant;
-import com.dubois.yann.go4lunch.model.RestaurantDetails;
-import com.dubois.yann.go4lunch.model.Result;
-
-import java.util.List;
+import com.dubois.yann.go4lunch.model.details.RestaurantDetails;
+import com.dubois.yann.go4lunch.model.details.ResultDetails;
+import com.dubois.yann.go4lunch.model.list.ResultList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,16 +34,15 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
         //Get bundle's information
         Bundle restaurantInformation = getIntent().getExtras();
-        //Restaurant restaurant = restaurantInformation.getParcelable("restaurant");
-        String place_id = restaurantInformation.getString("place_id");
+        String placeId = restaurantInformation.getString("place_id");
 
-        //Call for restaurant informations
-        Call<Result> call = Go4Lunch.createRetrofitClient().getPlaceInformation(place_id, getString(R.string.google_place_key));
-        call.enqueue(new Callback<Result>() {
+        //Call for restaurant information
+        Call<ResultDetails> call = Go4Lunch.createRetrofitClient().getPlaceInformation(placeId, getString(R.string.google_place_key));
+        call.enqueue(new Callback<ResultDetails>() {
             @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
+            public void onResponse(Call<ResultDetails> call, Response<ResultDetails> response) {
                 if(response.isSuccessful()){
-                    Result result = response.body();
+                    ResultDetails result = response.body();
                     if (result != null){
                         mRestaurant = result.getRestaurantDetails();
                     }
@@ -54,7 +50,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Result> call, Throwable t) {
+            public void onFailure(Call<ResultDetails> call, Throwable t) {
                 Log.d("Null", t.getMessage());
             }
         });

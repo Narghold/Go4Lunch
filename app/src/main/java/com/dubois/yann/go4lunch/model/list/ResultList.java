@@ -1,30 +1,28 @@
-package com.dubois.yann.go4lunch.model;
+package com.dubois.yann.go4lunch.model.list;
 
+import com.dubois.yann.go4lunch.model.details.RestaurantDetails;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class Result {
+public class ResultList {
 
     @SerializedName("html_attributions")
     public List<Object> htmlAttributions = null;
     @SerializedName("next_page_token")
     public String nextPageToken;
-    @SerializedName("result")
-    public RestaurantDetails restaurantDetails;
     @SerializedName("results")
     public List<Restaurant> restaurantList = null;
     @SerializedName("status")
     public String status;
 
     //Empty constructor for serialization
-    public Result() {}
+    public ResultList() {}
 
     //Constructor
-    public Result(List<Object> htmlAttributions, String nextPageToken, RestaurantDetails restaurantDetails, List<Restaurant> restaurantList, String status) {
+    public ResultList(List<Object> htmlAttributions, String nextPageToken, RestaurantDetails restaurantDetails, List<Restaurant> restaurantList, String status) {
         this.htmlAttributions = htmlAttributions;
         this.nextPageToken = nextPageToken;
-        this.restaurantDetails = restaurantDetails;
         this.restaurantList = restaurantList;
         this.status = status;
     }
@@ -62,11 +60,4 @@ public class Result {
         this.status = status;
     }
 
-    public RestaurantDetails getRestaurantDetails() {
-        return restaurantDetails;
-    }
-
-    public void setRestaurantDetails(RestaurantDetails restaurantDetails) {
-        this.restaurantDetails = restaurantDetails;
-    }
 }

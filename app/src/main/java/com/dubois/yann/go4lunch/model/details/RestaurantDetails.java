@@ -1,5 +1,7 @@
-package com.dubois.yann.go4lunch.model;
+package com.dubois.yann.go4lunch.model.details;
 
+import com.dubois.yann.go4lunch.model.OpeningHour;
+import com.dubois.yann.go4lunch.model.Photo;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;

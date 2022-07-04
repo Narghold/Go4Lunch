@@ -17,11 +17,13 @@ public class OpeningHour{
     //Empty constructor for serialization
     public OpeningHour() {}
 
+    //Constructor
     public OpeningHour(boolean openNow, List<String> weekdayText) {
         this.openNow = openNow;
         this.weekdayText = weekdayText;
     }
 
+    //Getters & Setters
     public boolean getOpenNow() {
         return openNow;
     }
@@ -37,5 +39,4 @@ public class OpeningHour{
     public void setWeekdayText(List<String> weekdayText) {
         this.weekdayText = weekdayText;
     }
-
 }
