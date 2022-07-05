@@ -92,4 +92,5 @@ public class RestaurantDetails {
     public void setOpeningHour(OpeningHour openingHour) {
         this.openingHour = openingHour;
     }
+
 }

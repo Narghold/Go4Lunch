@@ -35,27 +35,43 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         //Get bundle's information
         Bundle restaurantInformation = getIntent().getExtras();
         String placeId = restaurantInformation.getString("place_id");
-        String key = getString(R.string.google_place_key);
 
+        getRestaurantDetails(placeId);
+
+        //Btn call
+        mBinding.btnCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent call = new Intent(Intent.ACTION_CALL);
+                call.setData(Uri.parse("tel:" + mRestaurant.getFormattedPhoneNumber()));
+                startActivity(call);
+            }
+        });
+    }
+
+    private void getRestaurantDetails(String placeId){
+        String key = getString(R.string.google_place_key);
         //Call for restaurant information
         Call<ResultDetails> call = Go4Lunch.createRetrofitClient().getPlaceInformation(placeId, key);
         call.enqueue(new Callback<ResultDetails>() {
             @Override
-            public void onResponse(@NonNull Call<ResultDetails> call, @NonNull Response<ResultDetails> response) {
+            public void onResponse(Call<ResultDetails> call, Response<ResultDetails> response) {
                 if (response.isSuccessful()){
                     ResultDetails result = response.body();
-                    if(result != null){
+                    if (result != null){
                         mRestaurant = result.getRestaurantDetails();
+                        populateLayout();
                     }
                 }
             }
             @Override
             public void onFailure(Call<ResultDetails> call, Throwable t) {
-                Log.d("RESPONSE", t.getMessage());
+                Log.d("Null", t.getMessage());
             }
         });
+    }
 
-
+    private void populateLayout(){
         if (mRestaurant != null){
             //Set restaurant info
             mBinding.tvName.setText(mRestaurant.getName());
@@ -84,18 +100,5 @@ public class PlaceDetailsActivity extends AppCompatActivity {
                 Glide.with(this).load(R.drawable.ic_image_not_supported).into(mBinding.ivRestaurantPicture);
             }
         }
-
-
-
-
-        //Btn call
-        mBinding.btnCall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent call = new Intent(Intent.ACTION_CALL);
-                call.setData(Uri.parse("tel:"));
-                startActivity(call);
-            }
-        });
     }
 }
