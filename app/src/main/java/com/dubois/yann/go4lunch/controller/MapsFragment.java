@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import com.dubois.yann.go4lunch.Go4Lunch;
 import com.dubois.yann.go4lunch.R;
 import com.dubois.yann.go4lunch.api.PlaceRepository;
 import com.dubois.yann.go4lunch.model.list.Restaurant;
@@ -127,19 +128,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Activi
 
     private void getNearbyPlaces(Location location){
         //Build parameters
-        String baseUrl = "https://maps.googleapis.com/maps/api/place/nearbysearch/";
         String locationString = location.getLatitude() + "," + location.getLongitude();
         String key = getString(R.string.google_place_key);
 
-        //Initialize call
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
         //Call API
-        PlaceRepository mPlaceRepository = retrofit.create(PlaceRepository.class);
-        Call<ResultList> call = mPlaceRepository.getRestaurant(locationString, key);
+        Call<ResultList> call = Go4Lunch.createRetrofitClient().getRestaurant(locationString, key);
 
         //Execute call
         call.enqueue(new Callback<ResultList>() {

@@ -10,10 +10,10 @@ import retrofit2.http.Query;
 public interface PlaceRepository {
 
     //Sensor & Type & Radius(in meters)
-    @GET("json?sensor=true&type=restaurant&radius=2000")
+    @GET("nearbysearch/json?sensor=true&type=restaurant&radius=2000")
     Call<ResultList> getRestaurant(@Query("location") String location, @Query("key") String key);
 
     //Place Details
-    @GET("json?fields=name,vicinity,rating,website,formatted_phone_number,photos,opening_hours")
+    @GET("details/json?fields=name,vicinity,rating,website,formatted_phone_number,photos,opening_hours")
     Call<ResultDetails> getPlaceInformation(@Query("place_id") String place_id, @Query("key") String key);
 }

@@ -121,7 +121,7 @@ public class PlacesFragment extends Fragment implements LocationListener{
         String locationString = location.getLatitude() + "," + location.getLongitude();
         String key = getString(R.string.google_place_key);
 
-        //Call API
+        //Call Interface
         Call<ResultList> call = Go4Lunch.createRetrofitClient().getRestaurant(locationString, key);
 
         //Execute call
@@ -136,7 +136,7 @@ public class PlacesFragment extends Fragment implements LocationListener{
                 }
             }
             @Override
-            public void onFailure(@NotNull Call<ResultList> call, Throwable t) {
+            public void onFailure(Call<ResultList> call, Throwable t) {
                 Log.d("Null", t.getMessage());
             }
         });

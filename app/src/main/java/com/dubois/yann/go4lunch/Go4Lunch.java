@@ -15,7 +15,7 @@ public class Go4Lunch extends Application {
     public static PlaceRepository createRetrofitClient(){
         if(retrofit == null){
             retrofit = new Retrofit.Builder()
-                    .baseUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/")
+                    .baseUrl("https://maps.googleapis.com/maps/api/place/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }

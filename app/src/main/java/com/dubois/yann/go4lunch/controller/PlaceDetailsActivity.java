@@ -1,5 +1,6 @@
 package com.dubois.yann.go4lunch.controller;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -14,7 +15,6 @@ import com.dubois.yann.go4lunch.R;
 import com.dubois.yann.go4lunch.databinding.ActivityPlaceDetailsBinding;
 import com.dubois.yann.go4lunch.model.details.RestaurantDetails;
 import com.dubois.yann.go4lunch.model.details.ResultDetails;
-import com.dubois.yann.go4lunch.model.list.ResultList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,52 +35,58 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         //Get bundle's information
         Bundle restaurantInformation = getIntent().getExtras();
         String placeId = restaurantInformation.getString("place_id");
+        String key = getString(R.string.google_place_key);
 
         //Call for restaurant information
-        Call<ResultDetails> call = Go4Lunch.createRetrofitClient().getPlaceInformation(placeId, getString(R.string.google_place_key));
+        Call<ResultDetails> call = Go4Lunch.createRetrofitClient().getPlaceInformation(placeId, key);
         call.enqueue(new Callback<ResultDetails>() {
             @Override
-            public void onResponse(Call<ResultDetails> call, Response<ResultDetails> response) {
-                if(response.isSuccessful()){
+            public void onResponse(@NonNull Call<ResultDetails> call, @NonNull Response<ResultDetails> response) {
+                if (response.isSuccessful()){
                     ResultDetails result = response.body();
-                    if (result != null){
+                    if(result != null){
                         mRestaurant = result.getRestaurantDetails();
                     }
                 }
             }
-
             @Override
             public void onFailure(Call<ResultDetails> call, Throwable t) {
-                Log.d("Null", t.getMessage());
+                Log.d("RESPONSE", t.getMessage());
             }
         });
 
-        //Set place_id into name TV
-        mBinding.tvName.setText(mRestaurant.getName());
-        mBinding.tvAddress.setText(mRestaurant.getVicinity());
-        //Opening hours
-        if (mRestaurant.getOpeningHour() != null){
-            if (mRestaurant.getOpeningHour().getOpenNow()){
-                mBinding.tvOpeningHours.setText(getText(R.string.open_now));
-            }else{
-                mBinding.tvOpeningHours.setText(getText(R.string.close_now));
+
+        if (mRestaurant != null){
+            //Set restaurant info
+            mBinding.tvName.setText(mRestaurant.getName());
+            mBinding.tvAddress.setText(mRestaurant.getVicinity());
+            //Opening hours
+            if (mRestaurant.getOpeningHour() != null){
+                if (mRestaurant.getOpeningHour().getOpenNow()){
+                    mBinding.tvOpeningHours.setText(getText(R.string.open_now));
+                }else{
+                    mBinding.tvOpeningHours.setText(getText(R.string.close_now));
+                }
+            }else {
+                mBinding.tvOpeningHours.setText(getText(R.string.no_opening_hours));
             }
-        }else {
-            mBinding.tvOpeningHours.setText(getText(R.string.no_opening_hours));
+
+            //Set image
+            if (mRestaurant.getPhotos() != null){
+                //Get image from Place
+                String url = "https://maps.googleapis.com/maps/api/place/photo" //Base url
+                        + "?maxwidth=200"
+                        + "&photo_reference=" + mRestaurant.getPhotos().get(0).getPhotoReference()  //Photo reference
+                        + "&key=" + this.getString(R.string.google_place_key);//API Key;
+                Glide.with(this).load(url).into(mBinding.ivRestaurantPicture);
+            }else {
+                //Set no image icon
+                Glide.with(this).load(R.drawable.ic_image_not_supported).into(mBinding.ivRestaurantPicture);
+            }
         }
 
-        //Set image
-        if (mRestaurant.getPhotos() != null){
-            //Get image from Place
-            String url = "https://maps.googleapis.com/maps/api/place/photo" //Base url
-                    + "?maxwidth=200"
-                    + "&photo_reference=" + mRestaurant.getPhotos().get(0).getPhotoReference()  //Photo reference
-                    + "&key=" + this.getString(R.string.google_place_key);//API Key;
-            Glide.with(this).load(url).into(mBinding.ivRestaurantPicture);
-        }else {
-            //Set no image icon
-            Glide.with(this).load(R.drawable.ic_image_not_supported).into(mBinding.ivRestaurantPicture);
-        }
+
+
 
         //Btn call
         mBinding.btnCall.setOnClickListener(new View.OnClickListener() {
