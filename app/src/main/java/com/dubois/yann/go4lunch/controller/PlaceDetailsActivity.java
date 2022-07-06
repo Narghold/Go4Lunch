@@ -1,6 +1,5 @@
 package com.dubois.yann.go4lunch.controller;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -15,6 +14,9 @@ import com.dubois.yann.go4lunch.R;
 import com.dubois.yann.go4lunch.databinding.ActivityPlaceDetailsBinding;
 import com.dubois.yann.go4lunch.model.details.RestaurantDetails;
 import com.dubois.yann.go4lunch.model.details.ResultDetails;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,6 +26,8 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
     ActivityPlaceDetailsBinding mBinding;
     RestaurantDetails mRestaurant;
+    FirebaseUser mCurrentUser;
+    FirebaseFirestore mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +42,13 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
         getRestaurantDetails(placeId);
 
-        //Button call
+        //Get the last account connected to app
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mCurrentUser = mAuth.getCurrentUser();
+        //Get database instance
+        mDatabase = FirebaseFirestore.getInstance();
+
+        //Button Call
         mBinding.btnCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,6 +65,14 @@ public class PlaceDetailsActivity extends AppCompatActivity {
                 Intent website = new Intent(Intent.ACTION_VIEW);
                 website.setData(Uri.parse(mRestaurant.getWebsite()));
                 startActivity(website);
+            }
+        });
+
+        //Button Like
+        mBinding.btnLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setFavorite();
             }
         });
     }
@@ -119,5 +137,9 @@ public class PlaceDetailsActivity extends AppCompatActivity {
                 mBinding.btnWebsite.setEnabled(false);
             }
         }
+    }
+
+    private void setFavorite(){
+
     }
 }

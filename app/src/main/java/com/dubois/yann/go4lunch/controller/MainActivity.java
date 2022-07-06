@@ -17,10 +17,15 @@ import com.bumptech.glide.Glide;
 import com.dubois.yann.go4lunch.R;
 import com.dubois.yann.go4lunch.databinding.ActivityMainBinding;
 import com.dubois.yann.go4lunch.model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Objects;
 
@@ -99,9 +104,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addUserToDatabase() {
-        User user = new User(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), Objects.requireNonNull(mCurrentUser.getPhotoUrl()).toString());
-        //If user already exists, update information
-        mDatabase.collection(USER_KEY).document(user.getId()).set(user);
+        //Verify if user already exist to not delete his favorites restaurants
+        mDatabase.collection(USER_KEY).whereEqualTo(mCurrentUser.getUid(),true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                User currentUser = new User(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), Objects.requireNonNull(mCurrentUser.getPhotoUrl()).toString(), null);
+                DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                if (documentSnapshot.exists()){
+                    User user = documentSnapshot.toObject(User.class);
+                    //Verify if info are the same for user & mCurrentUser
+                    assert user != null;
+                    if (!Objects.equals(user.getUsername(), currentUser.getUsername()) || !Objects.equals(user.getPhotoURL(), currentUser.getPhotoURL())){
+                        //Then modify info
+                        user.setUsername(currentUser.getUsername());
+                        user.setPhotoURL(currentUser.getPhotoURL());
+                        //Update user
+                        mDatabase.collection(USER_KEY).document(user.getId()).set(user);
+                    }
+                }else{
+                    //Add new user
+                    mDatabase.collection(USER_KEY).document(currentUser.getId()).set(currentUser);
+                }
+            }
+        });
+
     }
 
 }

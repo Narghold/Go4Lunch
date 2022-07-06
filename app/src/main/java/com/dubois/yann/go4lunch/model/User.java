@@ -1,16 +1,21 @@
 package com.dubois.yann.go4lunch.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class User {
 
     private String id;
     private String username;
     private String photoURL;
+    private List<String> favoriteList;
 
     //Constructor
-    public User(String id, String username, String photoURL) {
+    public User(String id, String username, String photoURL, List<String> favoriteList) {
         this.id = id;
         this.username = username;
         this.photoURL = photoURL;
+        this.favoriteList = favoriteList;
     }
 
     //For database
@@ -30,6 +35,10 @@ public class User {
         return photoURL;
     }
 
+    public List<String> getFavoriteList() {
+        return favoriteList;
+    }
+
     //Setters
     public void setId(String id) {
         this.id = id;
@@ -41,6 +50,10 @@ public class User {
 
     public void setPhotoURL(String photoURL) {
         this.photoURL = photoURL;
+    }
+
+    public void setFavoriteList(List<String> favoriteList) {
+        this.favoriteList = favoriteList;
     }
 
     @Override
