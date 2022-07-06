@@ -1,8 +1,11 @@
 package com.dubois.yann.go4lunch.controller;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,11 +15,20 @@ import com.bumptech.glide.Glide;
 import com.dubois.yann.go4lunch.Go4Lunch;
 import com.dubois.yann.go4lunch.R;
 import com.dubois.yann.go4lunch.databinding.ActivityPlaceDetailsBinding;
+import com.dubois.yann.go4lunch.model.User;
 import com.dubois.yann.go4lunch.model.details.RestaurantDetails;
 import com.dubois.yann.go4lunch.model.details.ResultDetails;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,6 +38,9 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
     ActivityPlaceDetailsBinding mBinding;
     RestaurantDetails mRestaurant;
+    String placeId;
+    List<String> favoriteList = new ArrayList<>();
+
     FirebaseUser mCurrentUser;
     FirebaseFirestore mDatabase;
 
@@ -38,7 +53,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
         //Get bundle's information
         Bundle restaurantInformation = getIntent().getExtras();
-        String placeId = restaurantInformation.getString("place_id");
+        placeId = restaurantInformation.getString("place_id");
 
         getRestaurantDetails(placeId);
 
@@ -47,6 +62,21 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         mCurrentUser = mAuth.getCurrentUser();
         //Get database instance
         mDatabase = FirebaseFirestore.getInstance();
+        //Get favoriteList of user
+        mDatabase.collection("user").whereEqualTo("id", mCurrentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0); //get(0) cause we search only one user
+                    User user = documentSnapshot.toObject(User.class);
+                    favoriteList.clear(); //clear in case
+                    assert user != null;
+                    if(user.getFavoriteList() != null){
+                        favoriteList.addAll(user.getFavoriteList()); //add the list we get from database
+                    }
+                }
+            }
+        });
 
         //Button Call
         mBinding.btnCall.setOnClickListener(new View.OnClickListener() {
@@ -136,10 +166,38 @@ public class PlaceDetailsActivity extends AppCompatActivity {
             if (mRestaurant.getWebsite() == null){
                 mBinding.btnWebsite.setEnabled(false);
             }
+            //Like button
+            if (favoriteList.contains(placeId)){
+                for (Drawable drawable: mBinding.btnLike.getCompoundDrawables()){
+                    if (drawable != null){
+                        drawable.setTint(getResources().getColor(R.color.orange_toolbar));
+                    }
+                }
+            }
         }
     }
 
     private void setFavorite(){
-
+        //If place is in favList
+        if (favoriteList.contains(placeId)){
+            //Delete from list
+            favoriteList.remove(placeId);
+            for (Drawable drawable: mBinding.btnLike.getCompoundDrawables()){
+                if (drawable != null){
+                    drawable.setTint(getResources().getColor(R.color.darkslategray));
+                }
+            }
+        }else{
+            //Add in list
+            favoriteList.add(placeId);
+            for (Drawable drawable: mBinding.btnLike.getCompoundDrawables()){
+                if (drawable != null){
+                    drawable.setTint(getResources().getColor(R.color.orange_toolbar));
+                }
+            }
+        }
+        //Update database
+        User user = new User(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), Objects.requireNonNull(mCurrentUser.getPhotoUrl()).toString(), favoriteList);
+        mDatabase.collection("user").document(user.getId()).set(user);
     }
 }

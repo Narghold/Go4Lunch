@@ -14,6 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ImageContrastCheck"
         tools:srcCompat="@tools:sample/avatars" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -95,15 +96,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:clickable="true"
-            android:drawableTop="@drawable/ic_call"
             android:focusable="true"
+            android:background="?attr/selectableItemBackground"
             android:gravity="center"
             android:paddingVertical="20dp"
             android:text="@string/btn_call"
             android:textAllCaps="true"
             android:textColor="@color/orange_toolbar"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:drawableTopCompat="@drawable/ic_call" />
 
         <TextView
             android:id="@+id/btn_like"
@@ -111,15 +113,17 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:clickable="true"
-            android:drawableTop="@drawable/ic_star"
             android:focusable="true"
+            android:background="?attr/selectableItemBackground"
             android:gravity="center"
             android:paddingVertical="20dp"
             android:text="@string/btn_like"
             android:textAllCaps="true"
             android:textColor="@color/orange_toolbar"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:drawableTint="@color/darkslategray"
+            app:drawableTopCompat="@drawable/ic_star" />
 
         <TextView
             android:id="@+id/btn_website"
@@ -127,14 +131,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:clickable="true"
-            android:drawableTop="@drawable/ic_public"
             android:focusable="true"
+            android:background="?attr/selectableItemBackground"
             android:gravity="center"
             android:paddingVertical="20dp"
             android:text="@string/btn_website"
             android:textAllCaps="true"
             android:textColor="@color/orange_toolbar"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:drawableTopCompat="@drawable/ic_public" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
