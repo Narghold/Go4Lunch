@@ -105,12 +105,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void addUserToDatabase() {
         //Verify if user already exist to not delete his favorites restaurants
-        mDatabase.collection(USER_KEY).whereEqualTo(mCurrentUser.getUid(),true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        mDatabase.collection(USER_KEY).whereEqualTo("id", mCurrentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 User currentUser = new User(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), Objects.requireNonNull(mCurrentUser.getPhotoUrl()).toString(), null);
-                DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
-                if (documentSnapshot.exists()){
+                 QuerySnapshot result = task.getResult();
+                if (result.getDocuments().size() > 0){
+                    DocumentSnapshot documentSnapshot;
+                    documentSnapshot = result.getDocuments().get(0);   //get(0) cause we search only one user
                     User user = documentSnapshot.toObject(User.class);
                     //Verify if info are the same for user & mCurrentUser
                     assert user != null;
