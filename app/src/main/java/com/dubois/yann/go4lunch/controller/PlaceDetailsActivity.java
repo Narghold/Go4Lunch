@@ -38,13 +38,23 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
         getRestaurantDetails(placeId);
 
-        //Btn call
+        //Button call
         mBinding.btnCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent call = new Intent(Intent.ACTION_CALL);
+                Intent call = new Intent(Intent.ACTION_DIAL);
                 call.setData(Uri.parse("tel:" + mRestaurant.getFormattedPhoneNumber()));
                 startActivity(call);
+            }
+        });
+
+        //Button Website
+        mBinding.btnWebsite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent website = new Intent(Intent.ACTION_VIEW);
+                website.setData(Uri.parse(mRestaurant.getWebsite()));
+                startActivity(website);
             }
         });
     }
@@ -98,6 +108,15 @@ public class PlaceDetailsActivity extends AppCompatActivity {
             }else {
                 //Set no image icon
                 Glide.with(this).load(R.drawable.ic_image_not_supported).into(mBinding.ivRestaurantPicture);
+            }
+            //Enable buttons
+            //Call button
+            if (mRestaurant.getFormattedPhoneNumber() == null){
+                mBinding.btnCall.setEnabled(false);
+            }
+            //Website Button
+            if (mRestaurant.getWebsite() == null){
+                mBinding.btnWebsite.setEnabled(false);
             }
         }
     }
