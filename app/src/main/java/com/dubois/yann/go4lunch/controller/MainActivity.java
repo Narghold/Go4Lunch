@@ -33,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
     ActivityMainBinding mBinding;
     private static final int RC_LOCATION_PERM = 122;
 
-    private final String USER_KEY = "user";
-
     FirebaseUser mCurrentUser;
     FirebaseFirestore mDatabase;
 
@@ -104,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void addUserToDatabase() {
         //Verify if user already exist to not delete his favorites restaurants
-        mDatabase.collection(USER_KEY).whereEqualTo("id", mCurrentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        mDatabase.collection("user").whereEqualTo("id", mCurrentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 User currentUser = new User(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), Objects.requireNonNull(mCurrentUser.getPhotoUrl()).toString(), null);
@@ -120,11 +118,11 @@ public class MainActivity extends AppCompatActivity {
                         user.setUsername(currentUser.getUsername());
                         user.setPhotoURL(currentUser.getPhotoURL());
                         //Update user
-                        mDatabase.collection(USER_KEY).document(user.getId()).set(user);
+                        mDatabase.collection("user").document(user.getId()).set(user);
                     }
                 }else{
                     //Add new user
-                    mDatabase.collection(USER_KEY).document(currentUser.getId()).set(currentUser);
+                    mDatabase.collection("user").document(currentUser.getId()).set(currentUser);
                 }
             }
         });

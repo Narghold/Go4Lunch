@@ -1,20 +1,20 @@
 package com.dubois.yann.go4lunch.controller;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.Glide;
 import com.dubois.yann.go4lunch.Go4Lunch;
 import com.dubois.yann.go4lunch.R;
 import com.dubois.yann.go4lunch.databinding.ActivityPlaceDetailsBinding;
+import com.dubois.yann.go4lunch.model.RestaurantChoice;
 import com.dubois.yann.go4lunch.model.User;
 import com.dubois.yann.go4lunch.model.details.RestaurantDetails;
 import com.dubois.yann.go4lunch.model.details.ResultDetails;
@@ -27,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
@@ -105,6 +106,14 @@ public class PlaceDetailsActivity extends AppCompatActivity {
                 setFavorite();
             }
         });
+
+        //Fab Place choice
+        mBinding.fabPlaceChoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setChoice();
+            }
+        });
     }
 
     private void getRestaurantDetails(String placeId){
@@ -136,10 +145,14 @@ public class PlaceDetailsActivity extends AppCompatActivity {
             mBinding.tvAddress.setText(mRestaurant.getVicinity());
             //Opening hours
             if (mRestaurant.getOpeningHour() != null){
-                if (mRestaurant.getOpeningHour().getOpenNow()){
-                    mBinding.tvOpeningHours.setText(getText(R.string.open_now));
-                }else{
-                    mBinding.tvOpeningHours.setText(getText(R.string.close_now));
+                int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK); //0 -> Sunday to 6 -> Saturday
+                String weekdayText;
+                if (day == 0){
+                    weekdayText = mRestaurant.getOpeningHour().getWeekdayText().get(6); //Because sunday is 0 in the Calendar class & 6 in the serialized obj
+                    mBinding.tvOpeningHours.setText(weekdayText.substring(weekdayText.indexOf(":")).substring(2));
+                }else {
+                    weekdayText = mRestaurant.getOpeningHour().getWeekdayText().get(day - 1); //For other days, we have just to get the -1 index
+                    mBinding.tvOpeningHours.setText(weekdayText.substring(weekdayText.indexOf(":")).substring(2));
                 }
             }else {
                 mBinding.tvOpeningHours.setText(getText(R.string.no_opening_hours));
@@ -199,5 +212,10 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         //Update database
         User user = new User(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), Objects.requireNonNull(mCurrentUser.getPhotoUrl()).toString(), favoriteList);
         mDatabase.collection("user").document(user.getId()).set(user);
+    }
+
+    private void setChoice(){
+        RestaurantChoice restaurantChoice = new RestaurantChoice(placeId, mCurrentUser.getUid());
+        mDatabase.collection("restaurant_choice").document(restaurantChoice.getUserId()).set(restaurantChoice);
     }
 }
