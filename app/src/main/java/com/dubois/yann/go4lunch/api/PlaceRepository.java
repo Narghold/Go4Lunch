@@ -15,5 +15,5 @@ public interface PlaceRepository {
 
     //Place Details
     @GET("details/json?fields=name,vicinity,rating,website,formatted_phone_number,photos,opening_hours")
-    Call<ResultDetails> getPlaceInformation(@Query("place_id") String place_id, @Query("key") String key);
+    Call<ResultDetails> getPlaceInformation(@Query("place_id") String place_id, @Query("key") String key, @Query("language") String language);
 }

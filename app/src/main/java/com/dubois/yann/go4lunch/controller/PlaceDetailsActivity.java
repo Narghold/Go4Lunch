@@ -19,6 +19,7 @@ import com.dubois.yann.go4lunch.model.User;
 import com.dubois.yann.go4lunch.model.details.RestaurantDetails;
 import com.dubois.yann.go4lunch.model.details.ResultDetails;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,6 +30,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -118,8 +120,13 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
     private void getRestaurantDetails(String placeId){
         String key = getString(R.string.google_place_key);
+        //Language for call
+        String language = Locale.getDefault().getLanguage();
+        if(!language.equals("fr")){
+            language = "en";//If language is not fr then language is en by default
+        }
         //Call for restaurant information
-        Call<ResultDetails> call = Go4Lunch.createRetrofitClient().getPlaceInformation(placeId, key);
+        Call<ResultDetails> call = Go4Lunch.createRetrofitClient().getPlaceInformation(placeId, key, language);
         call.enqueue(new Callback<ResultDetails>() {
             @Override
             public void onResponse(Call<ResultDetails> call, Response<ResultDetails> response) {
@@ -149,11 +156,10 @@ public class PlaceDetailsActivity extends AppCompatActivity {
                 String weekdayText;
                 if (day == 0){
                     weekdayText = mRestaurant.getOpeningHour().getWeekdayText().get(6); //Because sunday is 0 in the Calendar class & 6 in the serialized obj
-                    mBinding.tvOpeningHours.setText(weekdayText.substring(weekdayText.indexOf(":")).substring(2));
                 }else {
-                    weekdayText = mRestaurant.getOpeningHour().getWeekdayText().get(day - 1); //For other days, we have just to get the -1 index
-                    mBinding.tvOpeningHours.setText(weekdayText.substring(weekdayText.indexOf(":")).substring(2));
+                    weekdayText = mRestaurant.getOpeningHour().getWeekdayText().get(day - 2); //For other days, we have just to get the -1 index
                 }
+                mBinding.tvOpeningHours.setText(weekdayText.substring(weekdayText.indexOf(":")).substring(2));
             }else {
                 mBinding.tvOpeningHours.setText(getText(R.string.no_opening_hours));
             }
@@ -216,6 +222,6 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
     private void setChoice(){
         RestaurantChoice restaurantChoice = new RestaurantChoice(placeId, mCurrentUser.getUid());
-        mDatabase.collection("restaurant_choice").document(restaurantChoice.getUserId()).set(restaurantChoice);
+        mDatabase.collection("restaurant_choice").document(restaurantChoice.getPlaceId()).set(restaurantChoice);
     }
 }
