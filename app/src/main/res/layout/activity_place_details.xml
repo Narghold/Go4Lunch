@@ -28,6 +28,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/darkslategray"
         app:srcCompat="@drawable/fui_ic_check_circle_black_128dp"
         android:contentDescription="@string/fab_choice" />
 
@@ -119,7 +120,7 @@
             android:paddingVertical="20dp"
             android:text="@string/btn_like"
             android:textAllCaps="true"
-            android:textColor="@color/orange_toolbar"
+            android:textColor="@color/darkslategray"
             android:textSize="20sp"
             android:textStyle="bold"
             app:drawableTint="@color/darkslategray"
@@ -142,4 +143,14 @@
             android:textStyle="bold"
             app:drawableTopCompat="@drawable/ic_public" />
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_workmates_choice"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/container_button"
+        tools:listitem="@layout/rv_workmate_item" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,7 @@
 package com.dubois.yann.go4lunch.controller;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.dubois.yann.go4lunch.Go4Lunch;
@@ -16,10 +18,12 @@ import com.dubois.yann.go4lunch.R;
 import com.dubois.yann.go4lunch.databinding.ActivityPlaceDetailsBinding;
 import com.dubois.yann.go4lunch.model.RestaurantChoice;
 import com.dubois.yann.go4lunch.model.User;
+import com.dubois.yann.go4lunch.model.UserChoice;
 import com.dubois.yann.go4lunch.model.details.RestaurantDetails;
 import com.dubois.yann.go4lunch.model.details.ResultDetails;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -46,6 +50,9 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
     FirebaseUser mCurrentUser;
     FirebaseFirestore mDatabase;
+
+    WorkmatesChoiceAdapter mWorkmatesChoiceAdapter;
+    RecyclerView mWorkmatesChoiceRecycler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +123,16 @@ public class PlaceDetailsActivity extends AppCompatActivity {
                 setChoice();
             }
         });
+
+        //RecyclerView for workmates choice
+        mDatabase.collection("restaurant_choice").whereEqualTo("place_id", placeId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    //TODO
+                }
+            }
+        });
     }
 
     private void getRestaurantDetails(String placeId){
@@ -123,7 +140,8 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         //Language for call
         String language = Locale.getDefault().getLanguage();
         if(!language.equals("fr")){
-            language = "en";//If language is not fr then language is en by default
+            //If language is not fr then language is "en" by default
+            language = "en";
         }
         //Call for restaurant information
         Call<ResultDetails> call = Go4Lunch.createRetrofitClient().getPlaceInformation(placeId, key, language);
@@ -193,6 +211,19 @@ public class PlaceDetailsActivity extends AppCompatActivity {
                     }
                 }
             }
+            //Choice FAB
+            mDatabase.collection("user_choice").whereEqualTo("user_id", mCurrentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()){
+                        if (task.getResult().getDocuments().isEmpty()){
+                            mBinding.fabPlaceChoice.setSupportImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.darkslategray)));
+                        }else {
+                            mBinding.fabPlaceChoice.setSupportImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange_toolbar)));
+                        }
+                    }
+                }
+            });
         }
     }
 
@@ -201,6 +232,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         if (favoriteList.contains(placeId)){
             //Delete from list
             favoriteList.remove(placeId);
+            mBinding.btnLike.setTextColor(getResources().getColor(R.color.darkslategray));
             for (Drawable drawable: mBinding.btnLike.getCompoundDrawables()){
                 if (drawable != null){
                     drawable.setTint(getResources().getColor(R.color.darkslategray));
@@ -209,6 +241,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         }else{
             //Add in list
             favoriteList.add(placeId);
+            mBinding.btnLike.setTextColor(getResources().getColor(R.color.orange_toolbar));
             for (Drawable drawable: mBinding.btnLike.getCompoundDrawables()){
                 if (drawable != null){
                     drawable.setTint(getResources().getColor(R.color.orange_toolbar));
@@ -220,8 +253,44 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         mDatabase.collection("user").document(user.getId()).set(user);
     }
 
+
     private void setChoice(){
         RestaurantChoice restaurantChoice = new RestaurantChoice(placeId, mCurrentUser.getUid());
-        mDatabase.collection("restaurant_choice").document(restaurantChoice.getPlaceId()).set(restaurantChoice);
+        UserChoice userChoice = new UserChoice(mCurrentUser.getUid(), placeId);
+        mDatabase.collection("user_choice").whereEqualTo("user_id", mCurrentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    if (task.getResult().getDocuments().isEmpty()){
+                        //Add
+                        mDatabase.collection("restaurant_choice").document(restaurantChoice.getPlaceId()).set(restaurantChoice);
+                        mDatabase.collection("user_choice").document(userChoice.getUserId()).set(userChoice);
+                        mBinding.fabPlaceChoice.setSupportImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange_toolbar)));
+                    }else{
+                        DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                        UserChoice choice = documentSnapshot.toObject(UserChoice.class);
+                        assert choice != null;
+                        if (!Objects.equals(userChoice.getPlaceId(), choice.getPlaceId())){
+                            //Update
+                            mDatabase.collection("restaurant_choice").document(restaurantChoice.getPlaceId()).set(restaurantChoice);
+                            mDatabase.collection("user_choice").document(userChoice.getUserId()).set(userChoice);
+                            mBinding.fabPlaceChoice.setSupportImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange_toolbar)));
+                        }else {
+                            //Delete
+                            mDatabase.collection("restaurantChoice").document(restaurantChoice.getPlaceId()).delete().addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w("Delete", "Error deleting document", e);
+                                }
+                            });
+                            mDatabase.collection("user_choice").document(userChoice.getUserId()).delete();
+                            mBinding.fabPlaceChoice.setSupportImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.darkslategray)));
+                        }
+                    }
+
+
+                }
+            }
+        });
     }
 }

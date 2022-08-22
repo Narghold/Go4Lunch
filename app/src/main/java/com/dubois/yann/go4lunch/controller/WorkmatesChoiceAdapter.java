@@ -16,40 +16,35 @@ import com.dubois.yann.go4lunch.model.User;
 
 import java.util.List;
 
-public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.WorkmatesViewHolder> {
+public class WorkmatesChoiceAdapter extends RecyclerView.Adapter<WorkmatesChoiceAdapter.WorkmatesChoiceViewHolder> {
 
     Context mContext;
+    List<User> mUserList;
 
-    //List of users
-    private final List<User> mUserList;
-
-    public static class WorkmatesViewHolder extends RecyclerView.ViewHolder {
+    public static class WorkmatesChoiceViewHolder extends RecyclerView.ViewHolder{
 
         ImageView mItemProfilePicture;
         TextView mItemRestaurantChoice;
 
-        public WorkmatesViewHolder(View view) {
+        public WorkmatesChoiceViewHolder(@NonNull View view) {
             super(view);
             mItemProfilePicture = view.findViewById(R.id.item_profile_picture);
             mItemRestaurantChoice = view.findViewById(R.id.item_restaurant_choice);
         }
     }
 
-    public WorkmatesAdapter(List<User> userList) {
-        mUserList = userList;
-    }
 
     @NonNull
     @Override
-    public WorkmatesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public WorkmatesChoiceAdapter.WorkmatesChoiceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         mContext = parent.getContext();
         LayoutInflater mInflater = LayoutInflater.from(mContext);
         View mView = mInflater.inflate(R.layout.rv_workmate_item, parent, false);
-        return new WorkmatesViewHolder(mView);
+        return new WorkmatesChoiceViewHolder(mView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull WorkmatesViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull WorkmatesChoiceAdapter.WorkmatesChoiceViewHolder holder, int position) {
         User itemUser = mUserList.get(position);
         Glide.with(mContext).load(itemUser.getPhotoURL()).circleCrop().into(holder.mItemProfilePicture);
         holder.mItemRestaurantChoice.setText(itemUser.getUsername());

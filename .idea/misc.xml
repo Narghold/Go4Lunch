@@ -5,6 +5,8 @@
       <map>
         <entry key="..\:/Users/Yann/AndroidStudioProjects/Go4Lunch/app/src/main/res/drawable/ic_image_not_supported.xml" value="0.2665" />
         <entry key="..\:/Users/Yann/AndroidStudioProjects/Go4Lunch/app/src/main/res/layout/activity_place_details.xml" value="0.25" />
+        <entry key="..\:/Users/Yann/AndroidStudioProjects/Go4Lunch/app/src/main/res/layout/fragment_workmate.xml" value="0.3494791666666667" />
+        <entry key="..\:/Users/Yann/AndroidStudioProjects/Go4Lunch/app/src/main/res/layout/rv_workmate_item.xml" value="0.3494791666666667" />
       </map>
     </option>
   </component>
