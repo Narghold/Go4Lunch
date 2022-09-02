@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.dubois.yann.go4lunch.R;
 import com.dubois.yann.go4lunch.model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WorkmatesChoiceAdapter extends RecyclerView.Adapter<WorkmatesChoiceAdapter.WorkmatesChoiceViewHolder> {
@@ -31,6 +32,14 @@ public class WorkmatesChoiceAdapter extends RecyclerView.Adapter<WorkmatesChoice
             mItemProfilePicture = view.findViewById(R.id.item_profile_picture);
             mItemRestaurantChoice = view.findViewById(R.id.item_restaurant_choice);
         }
+    }
+
+    public WorkmatesChoiceAdapter(){ mUserList = new ArrayList<>();}
+
+    public void setData(List<User> dataList){
+        mUserList.clear();
+        mUserList.addAll(dataList);
+        notifyDataSetChanged();
     }
 
 

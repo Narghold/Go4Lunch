@@ -1,5 +1,6 @@
 package com.dubois.yann.go4lunch.controller;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
@@ -10,6 +11,8 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -44,9 +47,11 @@ import retrofit2.Response;
 public class PlaceDetailsActivity extends AppCompatActivity {
 
     ActivityPlaceDetailsBinding mBinding;
+    Context mContext;
     RestaurantDetails mRestaurant;
     String placeId;
     List<String> favoriteList = new ArrayList<>();
+    List<User> userList = new ArrayList<>();
 
     FirebaseUser mCurrentUser;
     FirebaseFirestore mDatabase;
@@ -125,11 +130,42 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         });
 
         //RecyclerView for workmates choice
-        mDatabase.collection("restaurant_choice").whereEqualTo("place_id", placeId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        //Initialize RV
+        mWorkmatesChoiceRecycler = findViewById(R.id.rv_workmates_choice);
+        mWorkmatesChoiceRecycler.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+        mWorkmatesChoiceRecycler.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
+        mWorkmatesChoiceAdapter = new WorkmatesChoiceAdapter();
+        mWorkmatesChoiceRecycler.setAdapter(mWorkmatesChoiceAdapter);
+        //Get data
+        mDatabase.collection("restaurant_choice").whereEqualTo("placeId", placeId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
-                    //TODO
+                    if (!task.getResult().getDocuments().isEmpty()){
+                        List<DocumentSnapshot> documentSnapshotList = task.getResult().getDocuments();
+                        for (DocumentSnapshot documentSnapshot : documentSnapshotList) {
+                            RestaurantChoice restaurantChoice = documentSnapshot.toObject(RestaurantChoice.class);
+                            //Get users witch choose this place
+                            assert restaurantChoice != null;
+                            mDatabase.collection("user").whereEqualTo("id", restaurantChoice.getUserId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()){
+                                        for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
+                                            User user = documentSnapshot.toObject(User.class);
+                                            //Add all users but not your profile
+                                            assert user != null;
+                                            if (!Objects.equals(user.getId(), mCurrentUser.getUid())){
+                                                userList.add(user);
+                                            }
+                                            //Set data
+                                            mWorkmatesChoiceAdapter.setData(userList);
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
                 }
             }
         });
@@ -212,14 +248,19 @@ public class PlaceDetailsActivity extends AppCompatActivity {
                 }
             }
             //Choice FAB
-            mDatabase.collection("user_choice").whereEqualTo("user_id", mCurrentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            mDatabase.collection("user_choice").whereEqualTo("userId", mCurrentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()){
                         if (task.getResult().getDocuments().isEmpty()){
                             mBinding.fabPlaceChoice.setSupportImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.darkslategray)));
                         }else {
-                            mBinding.fabPlaceChoice.setSupportImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange_toolbar)));
+                            //Verify if is the place chosen by user
+                            UserChoice userChoice = task.getResult().getDocuments().get(0).toObject(UserChoice.class);
+                            assert userChoice != null;
+                            if (Objects.equals(placeId, userChoice.getPlaceId())){
+                                mBinding.fabPlaceChoice.setSupportImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange_toolbar)));
+                            }
                         }
                     }
                 }
