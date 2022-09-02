@@ -257,7 +257,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
     private void setChoice(){
         RestaurantChoice restaurantChoice = new RestaurantChoice(placeId, mCurrentUser.getUid());
         UserChoice userChoice = new UserChoice(mCurrentUser.getUid(), placeId);
-        mDatabase.collection("user_choice").whereEqualTo("user_id", mCurrentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        mDatabase.collection("user_choice").whereEqualTo("userId", mCurrentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
@@ -272,23 +272,18 @@ public class PlaceDetailsActivity extends AppCompatActivity {
                         assert choice != null;
                         if (!Objects.equals(userChoice.getPlaceId(), choice.getPlaceId())){
                             //Update
+                            //Delete the last, can't update directly cause of different placeId
+                            mDatabase.collection("restaurant_choice").document(choice.getPlaceId()).delete();
                             mDatabase.collection("restaurant_choice").document(restaurantChoice.getPlaceId()).set(restaurantChoice);
                             mDatabase.collection("user_choice").document(userChoice.getUserId()).set(userChoice);
                             mBinding.fabPlaceChoice.setSupportImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange_toolbar)));
                         }else {
                             //Delete
-                            mDatabase.collection("restaurantChoice").document(restaurantChoice.getPlaceId()).delete().addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.w("Delete", "Error deleting document", e);
-                                }
-                            });
+                            mDatabase.collection("restaurant_choice").document(restaurantChoice.getPlaceId()).delete();
                             mDatabase.collection("user_choice").document(userChoice.getUserId()).delete();
                             mBinding.fabPlaceChoice.setSupportImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.darkslategray)));
                         }
                     }
-
-
                 }
             }
         });

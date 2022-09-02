@@ -14,6 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Go4Lunch">
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
         <activity android:name=".controller.PlaceDetailsActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -28,10 +31,12 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".controller.LoginActivity" />
-        <activity android:name=".controller.SplashScreen"
+        <activity
+            android:name=".controller.SplashScreen"
             android:exported="true">
-            <intent-filter >
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

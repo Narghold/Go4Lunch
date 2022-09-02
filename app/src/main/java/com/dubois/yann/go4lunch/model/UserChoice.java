@@ -10,6 +10,9 @@ public class UserChoice {
         this.placeId = placeId;
     }
 
+    //Empty constructor for serialization
+    public UserChoice() {}
+
     //Getter & Setter
     public String getUserId() {
         return userId;
