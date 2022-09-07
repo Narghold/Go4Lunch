@@ -51,6 +51,10 @@
     <!-- Opening hours -->
     <string name="open_now">Open now</string>
     <string name="close_now">Close now</string>
-    <string name="no_opening_hours">No informations</string>
+    <string name="no_opening_hours">No information</string>
+
+    <!-- Workmates RV -->
+    <string name="eat_at"> eat at </string>
+    <string name="not_chosen"> haven\'t chosen yet.</string>
 
 </resources>

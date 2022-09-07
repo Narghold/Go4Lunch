@@ -297,7 +297,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
     private void setChoice(){
         RestaurantChoice restaurantChoice = new RestaurantChoice(placeId, mCurrentUser.getUid());
-        UserChoice userChoice = new UserChoice(mCurrentUser.getUid(), placeId);
+        UserChoice userChoice = new UserChoice(mCurrentUser.getUid(), placeId, mRestaurant.getName());
         mDatabase.collection("user_choice").whereEqualTo("userId", mCurrentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {

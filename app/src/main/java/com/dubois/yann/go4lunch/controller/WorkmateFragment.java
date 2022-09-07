@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dubois.yann.go4lunch.R;
 import com.dubois.yann.go4lunch.model.User;
+import com.dubois.yann.go4lunch.model.UserChoice;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -30,8 +31,8 @@ public class WorkmateFragment extends Fragment {
     private WorkmatesAdapter mWorkmatesAdapter;
     private RecyclerView mWorkmatesRecycler;
 
-    private final String USER_KEY = "user";
-    List<User> mUserList = new ArrayList<>();
+    List<User> mUserList  = new ArrayList<>();
+    List<UserChoice> mUserChoiceList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,29 +42,37 @@ public class WorkmateFragment extends Fragment {
 
         //Get userList from database
         FirebaseFirestore mDatabase = FirebaseFirestore.getInstance();
-        mDatabase.collection(USER_KEY).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        mDatabase.collection("user").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
                     for (QueryDocumentSnapshot document : task.getResult()){
                         User user = document.toObject(User.class);
                         mUserList.add(user);
-                        Log.d("User", user.toString());
                     }
-                    //Initialise recycler view
-                    mWorkmatesRecycler = mView.findViewById(R.id.rv_workmates);
-                    mWorkmatesRecycler.setLayoutManager(new LinearLayoutManager(mContext , LinearLayoutManager.VERTICAL, false));
-                    mWorkmatesRecycler.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
-                    mWorkmatesAdapter  = new WorkmatesAdapter(mUserList);
-                    mWorkmatesRecycler.setAdapter(mWorkmatesAdapter);
+                    //Get userChoiceList from database
+                    mDatabase.collection("user_choice").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()){
+                                for (QueryDocumentSnapshot document : task.getResult()){
+                                    UserChoice userChoice = document.toObject(UserChoice.class);
+                                    mUserChoiceList.add(userChoice);
+                                }
+                            }
+                            //Initialise recycler view
+                            mWorkmatesRecycler = mView.findViewById(R.id.rv_workmates);
+                            mWorkmatesRecycler.setLayoutManager(new LinearLayoutManager(mContext , LinearLayoutManager.VERTICAL, false));
+                            mWorkmatesRecycler.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
+                            mWorkmatesAdapter  = new WorkmatesAdapter(mUserList, mUserChoiceList);
+                            mWorkmatesRecycler.setAdapter(mWorkmatesAdapter);
+                        }
+                    });
+
                 }
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("User", "Can't get user");
-            }
         });
+
         return mView;
     }
 }

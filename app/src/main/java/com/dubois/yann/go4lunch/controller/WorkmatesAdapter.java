@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.dubois.yann.go4lunch.R;
 import com.dubois.yann.go4lunch.model.User;
+import com.dubois.yann.go4lunch.model.UserChoice;
 
 import java.util.List;
+import java.util.Objects;
 
 public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.WorkmatesViewHolder> {
 
@@ -22,6 +24,7 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.Work
 
     //List of users
     private final List<User> mUserList;
+    private final List<UserChoice> mUserChoiceList;
 
     public static class WorkmatesViewHolder extends RecyclerView.ViewHolder {
 
@@ -35,8 +38,9 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.Work
         }
     }
 
-    public WorkmatesAdapter(List<User> userList) {
+    public WorkmatesAdapter(List<User> userList, List<UserChoice> userChoiceList) {
         mUserList = userList;
+        mUserChoiceList = userChoiceList;
     }
 
     @NonNull
@@ -52,11 +56,21 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.Work
     public void onBindViewHolder(@NonNull WorkmatesViewHolder holder, int position) {
         User itemUser = mUserList.get(position);
         Glide.with(mContext).load(itemUser.getPhotoURL()).circleCrop().into(holder.mItemProfilePicture);
-        holder.mItemRestaurantChoice.setText(itemUser.getUsername());
+        holder.mItemRestaurantChoice.setText(setItemText(itemUser));
     }
 
     @Override
     public int getItemCount() {
         return mUserList.size();
+    }
+
+    private String setItemText(User itemUser){
+        String text = itemUser.getUsername() + " " + mContext.getString(R.string.not_chosen);
+        for (UserChoice userChoice : mUserChoiceList) {
+            if (Objects.equals(userChoice.getUserId(), itemUser.getId())){
+                text = itemUser.getUsername() + " " + mContext.getString(R.string.eat_at) + " " + userChoice.getPlaceName();
+            }
+        }
+        return text;
     }
 }
