@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.dubois.yann.go4lunch.R;
 import com.dubois.yann.go4lunch.databinding.ActivityMainBinding;
 import com.dubois.yann.go4lunch.model.User;
+import com.dubois.yann.go4lunch.model.UserChoice;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
@@ -64,21 +65,41 @@ public class MainActivity extends AppCompatActivity {
         mBinding.navigationDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.nd_logout:
-                        FirebaseAuth.getInstance().signOut();
-                        /*
-                         *  Return to LoginActivity after sign-out
-                         *  Don't use finish() cause of SplashScreen
-                         *  If loginActivity wasn't launch, stop the app
-                         */
-                        Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivity(mIntent);
-                        break;
-                    default:
-                        item.isChecked();
-                        mBinding.drawerLayout.close();
-                        break;
+                int menuId = item.getItemId();
+                /* Use if/else cause switch can't be use with not final objects
+                 * R.id.****** are not final objects
+                 */
+                if (menuId == R.id.nd_your_lunch) {
+                    //Get user choice from database
+                    mDatabase.collection("user_choice").whereEqualTo("userId", mCurrentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                //Serialize result to UserChoice.class
+                                DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                                UserChoice userChoice = documentSnapshot.toObject(UserChoice.class);
+                                //Create intent
+                                Intent detailActivity = new Intent(getApplicationContext(), PlaceDetailsActivity.class);
+                                Bundle restaurantInformation = new Bundle();
+                                assert userChoice != null;
+                                restaurantInformation.putString("place_id", userChoice.getPlaceId());
+                                detailActivity.putExtras(restaurantInformation);
+                                startActivity(detailActivity);
+                            }
+                        }
+                    });
+                } else if (menuId == R.id.nd_logout) {
+                    FirebaseAuth.getInstance().signOut();
+                    /*
+                     *  Return to LoginActivity after sign-out
+                     *  Don't use finish() cause of SplashScreen
+                     *  If loginActivity wasn't launch, stop the app
+                     */
+                    Intent mIntent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(mIntent);
+                } else {
+                    item.isChecked();
+                    mBinding.drawerLayout.close();
                 }
                 return true;
             }
