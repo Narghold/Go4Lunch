@@ -19,18 +19,19 @@ public class Restaurant {
     @SerializedName("vicinity")
     private String address;
     @SerializedName("rating")
-    private Double rating;
+    private float rating;
     @SerializedName("photos")
     public List<Photo> photos = null;
     @SerializedName("opening_hours")
     private OpeningHour openingHour;
+    private int distance;
 
 
     //Empty constructor for serialization
     public Restaurant() {}
 
     //Constructor
-    public Restaurant(int id, String place_id, String name, Geometry geometry, String address, Double rating, List<Photo> photos, OpeningHour openingHour) {
+    public Restaurant(int id, String place_id, String name, Geometry geometry, String address, float rating, List<Photo> photos, OpeningHour openingHour, int distance) {
         this.id = id;
         this.place_id = place_id;
         this.name = name;
@@ -39,6 +40,7 @@ public class Restaurant {
         this.rating = rating;
         this.photos = photos;
         this.openingHour = openingHour;
+        this.distance = distance;
     }
 
     public int getId() {
@@ -81,11 +83,11 @@ public class Restaurant {
         this.address = address;
     }
 
-    public Double getRating() {
+    public float getRating() {
         return rating;
     }
 
-    public void setRating(Double rating) {
+    public void setRating(float rating) {
         this.rating = rating;
     }
 
@@ -101,9 +103,15 @@ public class Restaurant {
         return openingHour;
     }
 
-
     public void setOpeningHour(OpeningHour openingHour) {
         this.openingHour = openingHour;
     }
 
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
 }

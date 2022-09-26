@@ -48,10 +48,11 @@
     <string name="rationale_rq_location">This app needs access to your location.</string>
     <string name="rationale_rq_location_second">This app needs access to your location to work properly.</string>
 
-    <!-- Opening hours -->
+    <!-- Place Recycler -->
     <string name="open_now">Open now</string>
     <string name="close_now">Close now</string>
     <string name="no_opening_hours">No information</string>
+    <string name="no_rating">No rating</string>
 
     <!-- Workmates RV -->
     <string name="eat_at"> eat at </string>

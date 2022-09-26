@@ -22,6 +22,13 @@ import com.dubois.yann.go4lunch.Go4Lunch;
 import com.dubois.yann.go4lunch.R;
 import com.dubois.yann.go4lunch.model.list.Restaurant;
 import com.dubois.yann.go4lunch.model.list.ResultList;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.maps.android.SphericalUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -52,6 +59,7 @@ public class PlacesFragment extends Fragment implements LocationListener{
         mPlaceAdapter.setData(mRestaurantList);
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,9 +74,8 @@ public class PlacesFragment extends Fragment implements LocationListener{
         mPlaceRecycler = mView.findViewById(R.id.rv_places);
         mPlaceRecycler.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         mPlaceRecycler.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
-        mPlaceAdapter = new PlaceAdapter();
+        mPlaceAdapter = new PlaceAdapter(mRestaurantList);
         mPlaceRecycler.setAdapter(mPlaceAdapter);
-        mPlaceAdapter.setData(mRestaurantList);
 
         // Inflate the layout for this fragment
         return mView;
@@ -140,8 +147,17 @@ public class PlacesFragment extends Fragment implements LocationListener{
                 Log.d("Null", t.getMessage());
             }
         });
+        for (Restaurant restaurant : mRestaurantList) {
+            int distance = calculateDistance(mLocation, restaurant.getGeometry().getLocation());
+            restaurant.setDistance(distance);
+        }
         mPlaceAdapter.setData(mRestaurantList);
     }
 
-    //TODO:: private int calculateDistanceFromCurrentLocation(){}
+    public int calculateDistance(Location userLocation, com.dubois.yann.go4lunch.model.Location placeLocation){
+        LatLng userLatLng = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
+        LatLng placeLatLng = new LatLng(placeLocation.getLat(), placeLocation.getLng());
+        double distance = SphericalUtil.computeDistanceBetween(userLatLng, placeLatLng);
+        return (int) distance;
+    }
 }

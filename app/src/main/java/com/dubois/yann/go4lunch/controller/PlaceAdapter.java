@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,7 +18,6 @@ import com.bumptech.glide.Glide;
 import com.dubois.yann.go4lunch.R;
 import com.dubois.yann.go4lunch.model.list.Restaurant;
 
-import java.util.ArrayList;
 import java.util.List;
 
 class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
@@ -36,8 +36,8 @@ class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
         return new PlaceViewHolder(mView);
     }
 
-    public PlaceAdapter(){
-        mPlaceList = new  ArrayList<>();
+    public PlaceAdapter(List<Restaurant> placeList){
+        mPlaceList = placeList;
     }
 
     public void setData(List<Restaurant> dataList){
@@ -51,9 +51,18 @@ class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
 
         Restaurant itemRestaurant = mPlaceList.get(position);
         holder.mItemName.setText(itemRestaurant.getName());
-        holder.mItemRating.setText(String.valueOf(itemRestaurant.getRating()));
-        holder.mItemDistance.setText("100m");
+        holder.mItemDistance.setText(String.format("%d m", itemRestaurant.getDistance()));
         holder.mItemDetail.setText(itemRestaurant.getAddress());
+
+        //Rating
+        if (itemRestaurant.getRating() >= 1){
+            holder.mItemRating.setRating(itemRestaurant.getRating());
+            holder.mItemNoRating.setVisibility(View.GONE);
+            holder.mItemRating.setVisibility(View.VISIBLE);
+        }else {
+            holder.mItemRating.setVisibility(View.GONE);
+            holder.mItemNoRating.setVisibility(View.VISIBLE);
+        }
 
         //Opening hours
         if (itemRestaurant.getOpeningHour() != null){
@@ -103,7 +112,8 @@ class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
         TextView mItemName;
         TextView mItemDetail;
         TextView mItemDistance;
-        TextView mItemRating;
+        RatingBar mItemRating;
+        TextView mItemNoRating;
         ImageView mItemPhoto;
         TextView mItemHour;
         ConstraintLayout mItem;
@@ -114,9 +124,11 @@ class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
             mItemDetail = view.findViewById(R.id.item_place_detail);
             mItemDistance = view.findViewById(R.id.item_place_distance);
             mItemRating = view.findViewById(R.id.item_place_rating);
+            mItemNoRating = view.findViewById(R.id.item_no_rating);
             mItemPhoto = view.findViewById(R.id.item_place_img);
             mItemHour = view.findViewById(R.id.item_place_hour);
             mItem = view.findViewById(R.id.item_list);
         }
     }
+
 }
