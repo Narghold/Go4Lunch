@@ -2,10 +2,12 @@ package com.dubois.yann.go4lunch.controller;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +18,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.bumptech.glide.Glide;
 import com.dubois.yann.go4lunch.R;
 import com.dubois.yann.go4lunch.controller.ui.place_details.PlaceDetailsActivity;
+import com.dubois.yann.go4lunch.databinding.ActivityMainBinding;
 import com.dubois.yann.go4lunch.model.User;
 import com.dubois.yann.go4lunch.model.UserChoice;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,6 +29,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Objects;
 
@@ -36,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseUser mCurrentUser;
     FirebaseFirestore mDatabase;
+    String notificationToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +124,16 @@ public class MainActivity extends AppCompatActivity {
         assert mNavHostFragment != null;
         NavController mNavController = mNavHostFragment.getNavController();
         NavigationUI.setupWithNavController(mBinding.bottomNavigation, mNavController);
+
+        //Get notification token
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (task.isSuccessful()){
+                    notificationToken = task.getResult();
+                }
+            }
+        });
     }
 
     private void addUserToDatabase() {
@@ -126,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         mDatabase.collection("user").whereEqualTo("id", mCurrentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                User currentUser = new User(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), Objects.requireNonNull(mCurrentUser.getPhotoUrl()).toString(), null);
+                User currentUser = new User(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), Objects.requireNonNull(mCurrentUser.getPhotoUrl()).toString(), null, notificationToken);
                 QuerySnapshot result = task.getResult();
                 if (result.getDocuments().size() > 0){
                     DocumentSnapshot documentSnapshot;
@@ -134,10 +149,11 @@ public class MainActivity extends AppCompatActivity {
                     User user = documentSnapshot.toObject(User.class);
                     //Verify if info are the same for user & mCurrentUser
                     assert user != null;
-                    if (!Objects.equals(user.getUsername(), currentUser.getUsername()) || !Objects.equals(user.getPhotoURL(), currentUser.getPhotoURL())){
+                    if (!Objects.equals(user.getUsername(), currentUser.getUsername()) || !Objects.equals(user.getPhotoURL(), currentUser.getPhotoURL()) || !Objects.equals(user.getNotificationToken(), currentUser.getNotificationToken())){
                         //Then modify info
                         user.setUsername(currentUser.getUsername());
                         user.setPhotoURL(currentUser.getPhotoURL());
+                        user.setNotificationToken(notificationToken);
                         //Update user
                         mDatabase.collection("user").document(user.getId()).set(user);
                     }
@@ -147,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
 }

@@ -71,6 +71,7 @@ public class PlacesFragment extends Fragment implements LocationListener{
         mPlaceRecycler.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
         mPlaceAdapter = new PlaceAdapter(mRestaurantList);
         mPlaceRecycler.setAdapter(mPlaceAdapter);
+        mPlaceAdapter.setData(mRestaurantList);
 
         // Inflate the layout for this fragment
         return mView;

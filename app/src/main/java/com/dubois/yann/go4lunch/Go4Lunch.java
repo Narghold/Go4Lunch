@@ -1,9 +1,8 @@
 package com.dubois.yann.go4lunch;
 
 import android.app.Application;
-import android.content.res.Resources;
 
-import com.dubois.yann.go4lunch.api.PlaceRepository;
+import com.dubois.yann.go4lunch.util.PlaceRepository;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

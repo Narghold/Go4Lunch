@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment;
 
 import com.dubois.yann.go4lunch.Go4Lunch;
 import com.dubois.yann.go4lunch.R;
-import com.dubois.yann.go4lunch.api.PlaceRepository;
 import com.dubois.yann.go4lunch.model.list.Restaurant;
 import com.dubois.yann.go4lunch.model.list.ResultList;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -38,8 +37,6 @@ import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback, LocationListener {
 

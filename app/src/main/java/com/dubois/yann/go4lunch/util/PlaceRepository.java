@@ -1,4 +1,4 @@
-package com.dubois.yann.go4lunch.api;
+package com.dubois.yann.go4lunch.util;
 
 import com.dubois.yann.go4lunch.model.details.ResultDetails;
 import com.dubois.yann.go4lunch.model.list.ResultList;

@@ -288,7 +288,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
             }
         }
         //Update database
-        User user = new User(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), Objects.requireNonNull(mCurrentUser.getPhotoUrl()).toString(), favoriteList);
+        User user = new User(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), Objects.requireNonNull(mCurrentUser.getPhotoUrl()).toString(), favoriteList, null);
         mDatabase.collection("user").document(user.getId()).set(user);
     }
 

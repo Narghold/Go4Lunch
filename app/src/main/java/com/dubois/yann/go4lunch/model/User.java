@@ -9,13 +9,15 @@ public class User {
     private String username;
     private String photoURL;
     private List<String> favoriteList;
+    private String notificationToken;
 
     //Constructor
-    public User(String id, String username, String photoURL, List<String> favoriteList) {
+    public User(String id, String username, String photoURL, List<String> favoriteList, String notificationToken) {
         this.id = id;
         this.username = username;
         this.photoURL = photoURL;
         this.favoriteList = favoriteList;
+        this.notificationToken = notificationToken;
     }
 
     //For database
@@ -54,6 +56,14 @@ public class User {
 
     public void setFavoriteList(List<String> favoriteList) {
         this.favoriteList = favoriteList;
+    }
+
+    public String getNotificationToken() {
+        return notificationToken;
+    }
+
+    public void setNotificationToken(String notificationToken) {
+        this.notificationToken = notificationToken;
     }
 
     @Override
