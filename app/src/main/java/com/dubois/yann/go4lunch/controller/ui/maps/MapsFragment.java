@@ -1,4 +1,4 @@
-package com.dubois.yann.go4lunch.controller;
+package com.dubois.yann.go4lunch.controller.ui.maps;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -13,26 +13,24 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.dubois.yann.go4lunch.Go4Lunch;
 import com.dubois.yann.go4lunch.R;
+import com.dubois.yann.go4lunch.api.PlaceRepository;
 import com.dubois.yann.go4lunch.model.list.Restaurant;
 import com.dubois.yann.go4lunch.model.list.ResultList;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.maps.android.SphericalUtil;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -40,53 +38,58 @@ import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
-public class PlacesFragment extends Fragment implements LocationListener{
-
-    private PlaceAdapter mPlaceAdapter;
-    private RecyclerView mPlaceRecycler;
+public class MapsFragment extends Fragment implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback, LocationListener {
 
     private LocationManager mLocationManager;
     private Location mLocation;
-    private static final int RC_LOCATION_PERM = 122;
+    private GoogleMap mMap;
 
-    private List<Restaurant> mRestaurantList = new ArrayList<>();
+    private static final int RC_LOCATION_PERM = 122;
 
     @Override
     public void onResume() {
         super.onResume();
         askLocationPermission();
-        mPlaceAdapter.setData(mRestaurantList);
     }
 
     @SuppressLint("MissingPermission")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View mView = inflater.inflate(R.layout.fragment_places, container, false);
-        Context mContext = mView.getContext();
-
-        //Get location
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         mLocationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
         getLocation();
-
-        //Initialize RecyclerView
-        mPlaceRecycler = mView.findViewById(R.id.rv_places);
-        mPlaceRecycler.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-        mPlaceRecycler.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
-        mPlaceAdapter = new PlaceAdapter(mRestaurantList);
-        mPlaceRecycler.setAdapter(mPlaceAdapter);
-
-        // Inflate the layout for this fragment
-        return mView;
+        return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        SupportMapFragment mMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        if (mMapFragment != null) {
+            mMapFragment.getMapAsync(this);
+        }
+     }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        if (mLocation != null){
+            mMap = googleMap;
+            LatLng mLatLng = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 14));
+        }
+    }
+
+    @SuppressLint("MissingPermission")
     @Override
     public void onLocationChanged(@NonNull Location location) {
         mLocation = location;
         if (mLocation != null){
             mLocationManager.removeUpdates(this);
-            //Get places
             getNearbyPlaces(mLocation);
         }
     }
@@ -107,6 +110,13 @@ public class PlacesFragment extends Fragment implements LocationListener{
     }
 
     @SuppressLint("MissingPermission")
+    public void getLocation(){
+        if (EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) || EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)){
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        }
+    }
+
+    @SuppressLint("MissingPermission")
     @AfterPermissionGranted(RC_LOCATION_PERM)
     private void askLocationPermission() {
         if (EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) || EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)){
@@ -116,19 +126,12 @@ public class PlacesFragment extends Fragment implements LocationListener{
         }
     }
 
-    @SuppressLint("MissingPermission")
-    public void getLocation(){
-        if (EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) || EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)){
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-        }
-    }
-
     private void getNearbyPlaces(Location location){
         //Build parameters
         String locationString = location.getLatitude() + "," + location.getLongitude();
         String key = getString(R.string.google_place_key);
 
-        //Call Interface
+        //Call API
         Call<ResultList> call = Go4Lunch.createRetrofitClient().getRestaurant(locationString, key);
 
         //Execute call
@@ -138,26 +141,26 @@ public class PlacesFragment extends Fragment implements LocationListener{
                 if(response.isSuccessful()){
                     ResultList result = response.body();
                     if (result != null){
-                        mRestaurantList = result.getRestaurantList();
+                        List<Restaurant> restaurantList = result.getRestaurantList();
+                        for (Restaurant restaurant : restaurantList){
+                            //Get info for marker
+                            Double lat = restaurant.getGeometry().getLocation().getLat();
+                            Double lng = restaurant.getGeometry().getLocation().getLng();
+                            String name = restaurant.getName();
+                            //Initialize marker
+                            MarkerOptions markerOptions = new MarkerOptions();
+                            markerOptions.position(new LatLng(lat, lng));
+                            markerOptions.title(name);
+                            //Add marker
+                            mMap.addMarker(markerOptions);
+                        }
                     }
                 }
             }
             @Override
-            public void onFailure(Call<ResultList> call, Throwable t) {
+            public void onFailure(@NotNull Call<ResultList> call, Throwable t) {
                 Log.d("Null", t.getMessage());
             }
         });
-        for (Restaurant restaurant : mRestaurantList) {
-            int distance = calculateDistance(mLocation, restaurant.getGeometry().getLocation());
-            restaurant.setDistance(distance);
-        }
-        mPlaceAdapter.setData(mRestaurantList);
-    }
-
-    public int calculateDistance(Location userLocation, com.dubois.yann.go4lunch.model.Location placeLocation){
-        LatLng userLatLng = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
-        LatLng placeLatLng = new LatLng(placeLocation.getLat(), placeLocation.getLng());
-        double distance = SphericalUtil.computeDistanceBetween(userLatLng, placeLatLng);
-        return (int) distance;
     }
 }

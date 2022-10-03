@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="?attr/actionBarSize"
     android:layout_marginBottom="?attr/actionBarSize"
-    tools:context=".controller.WorkmateFragment">
+    tools:context=".controller.ui.workmates.WorkmateFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_workmates"

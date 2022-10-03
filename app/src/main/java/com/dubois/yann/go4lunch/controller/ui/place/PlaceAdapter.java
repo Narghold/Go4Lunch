@@ -1,4 +1,4 @@
-package com.dubois.yann.go4lunch.controller;
+package com.dubois.yann.go4lunch.controller.ui.place;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.dubois.yann.go4lunch.R;
+import com.dubois.yann.go4lunch.controller.ui.place_details.PlaceDetailsActivity;
 import com.dubois.yann.go4lunch.model.list.Restaurant;
 
 import java.util.List;

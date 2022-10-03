@@ -1,8 +1,7 @@
-package com.dubois.yann.go4lunch.controller;
+package com.dubois.yann.go4lunch.controller.ui.workmates;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import com.dubois.yann.go4lunch.R;
 import com.dubois.yann.go4lunch.model.User;
 import com.dubois.yann.go4lunch.model.UserChoice;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;

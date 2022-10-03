@@ -1,4 +1,4 @@
-package com.dubois.yann.go4lunch.controller;
+package com.dubois.yann.go4lunch.controller.ui.place_details;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,8 +25,6 @@ import com.dubois.yann.go4lunch.model.UserChoice;
 import com.dubois.yann.go4lunch.model.details.RestaurantDetails;
 import com.dubois.yann.go4lunch.model.details.ResultDetails;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -211,7 +209,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
                 if (day == 0){
                     weekdayText = mRestaurant.getOpeningHour().getWeekdayText().get(6); //Because sunday is 0 in the Calendar class & 6 in the serialized obj
                 }else {
-                    weekdayText = mRestaurant.getOpeningHour().getWeekdayText().get(day - 2); //For other days, we have just to get the -1 index
+                    weekdayText = mRestaurant.getOpeningHour().getWeekdayText().get(day - 1); //For other days, we have just to get the -1 index
                 }
                 mBinding.tvOpeningHours.setText(weekdayText.substring(weekdayText.indexOf(":")).substring(2));
             }else {

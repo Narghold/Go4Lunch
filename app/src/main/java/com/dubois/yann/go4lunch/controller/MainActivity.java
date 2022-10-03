@@ -15,7 +15,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
 import com.dubois.yann.go4lunch.R;
-import com.dubois.yann.go4lunch.databinding.ActivityMainBinding;
+import com.dubois.yann.go4lunch.controller.ui.place_details.PlaceDetailsActivity;
 import com.dubois.yann.go4lunch.model.User;
 import com.dubois.yann.go4lunch.model.UserChoice;
 import com.google.android.gms.tasks.OnCompleteListener;

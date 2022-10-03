@@ -1,4 +1,4 @@
-package com.dubois.yann.go4lunch.controller;
+package com.dubois.yann.go4lunch.controller.ui.place_details;
 
 import android.content.Context;
 import android.view.LayoutInflater;

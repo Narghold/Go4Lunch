@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="?attr/actionBarSize"
     android:layout_marginBottom="?attr/actionBarSize"
-    tools:context=".controller.PlacesFragment">
+    tools:context=".controller.ui.place.PlacesFragment">
 
 
     <androidx.recyclerview.widget.RecyclerView
