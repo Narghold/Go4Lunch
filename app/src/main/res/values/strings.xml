@@ -58,4 +58,8 @@
     <string name="eat_at"> eat at </string>
     <string name="not_chosen"> haven\'t chosen yet.</string>
 
+    <!-- Notification -->
+    <string name="default_notification_text">You haven\'t chosen a restaurant yet.</string>
+    <string name="eat_notification">You eat at : </string>
+
 </resources>
