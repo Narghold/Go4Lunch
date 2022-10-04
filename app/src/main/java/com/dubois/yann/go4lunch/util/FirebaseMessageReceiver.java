@@ -48,10 +48,8 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
         Intent intent = new Intent(this, SplashScreen.class);
         String channel_id = "notification_channel";
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        //Pass the intent to PendingIntent to start the next Activity
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
-        //Create a Builder object using NotificationCompat class. This will allow control over all the flags
         NotificationCompat.Builder builder = null;
         while(messageBody == null){
              builder = new NotificationCompat.Builder(getApplicationContext(), channel_id)
@@ -63,8 +61,6 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
                     .setContentIntent(pendingIntent);
         }
 
-
-        // Create an object of NotificationManager class to notify the user of events that happen in the background.
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         // Check if the Android Version is greater than Oreo
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -85,13 +81,14 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
-                    DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
-                    UserChoice userChoice = documentSnapshot.toObject(UserChoice.class);
-                    assert userChoice != null;
-                    messageBody = getString(R.string.eat_notification) + " " + userChoice.getPlaceName();
-                    Log.d("Message", messageBody);
-                }else {
-                    messageBody = getString(R.string.default_notification_text);
+                    if (!task.getResult().getDocuments().isEmpty()){
+                        DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                        UserChoice userChoice = documentSnapshot.toObject(UserChoice.class);
+                        assert userChoice != null;
+                        messageBody = getString(R.string.eat_notification) + " " + userChoice.getPlaceName();
+                    }else {
+                        messageBody = getString(R.string.default_notification_text);
+                    }
                 }
             }
         });

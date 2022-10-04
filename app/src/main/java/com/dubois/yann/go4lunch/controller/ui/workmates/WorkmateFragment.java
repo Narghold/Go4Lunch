@@ -17,17 +17,22 @@ import com.dubois.yann.go4lunch.model.User;
 import com.dubois.yann.go4lunch.model.UserChoice;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class WorkmateFragment extends Fragment {
 
     private WorkmatesAdapter mWorkmatesAdapter;
     private RecyclerView mWorkmatesRecycler;
+
+    FirebaseAuth firebaseAuth;
 
     List<User> mUserList  = new ArrayList<>();
     List<UserChoice> mUserChoiceList = new ArrayList<>();
@@ -38,6 +43,9 @@ public class WorkmateFragment extends Fragment {
         View mView = inflater.inflate(R.layout.fragment_workmate, container, false);
         Context mContext = mView.getContext();
 
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+
         //Get userList from database
         FirebaseFirestore mDatabase = FirebaseFirestore.getInstance();
         mDatabase.collection("user").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -46,7 +54,11 @@ public class WorkmateFragment extends Fragment {
                 if (task.isSuccessful()){
                     for (QueryDocumentSnapshot document : task.getResult()){
                         User user = document.toObject(User.class);
-                        mUserList.add(user);
+                        //Add all users but not your profile
+                        assert currentUser != null;
+                        if (!Objects.equals(user.getId(), currentUser.getUid())){
+                            mUserList.add(user);
+                        }
                     }
                     //Get userChoiceList from database
                     mDatabase.collection("user_choice").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
