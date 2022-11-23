@@ -1,12 +1,14 @@
 package com.dubois.yann.go4lunch.controller;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -23,7 +25,8 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class SplashScreen extends AppCompatActivity implements EasyPermissions.PermissionCallbacks, ActivityCompat.OnRequestPermissionsResultCallback {
 
-    private static final int RC_LOCATION_PERM = 122;
+    private static final int RC_LOCATION_PERM = 1;
+    private static final int RC_NOTIFICATION_PERM = 2;
 
     private FirebaseUser currentUser;
 
@@ -32,7 +35,10 @@ public class SplashScreen extends AppCompatActivity implements EasyPermissions.P
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        //Ask for location permissions
+        //Ask for permissions
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            askNotificationPermission();
+        }
         askLocationPermission();
 
         //Get the las account connected to app
@@ -44,6 +50,16 @@ public class SplashScreen extends AppCompatActivity implements EasyPermissions.P
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    @AfterPermissionGranted(RC_NOTIFICATION_PERM)
+    private void askNotificationPermission(){
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.POST_NOTIFICATIONS)){
+            Toast.makeText(this, "Notification permission", Toast.LENGTH_LONG).show();
+        }else {
+            EasyPermissions.requestPermissions(this,"rationale", RC_NOTIFICATION_PERM, Manifest.permission.POST_NOTIFICATIONS);
+        }
     }
 
     @SuppressLint("MissingPermission")

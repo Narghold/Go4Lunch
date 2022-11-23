@@ -1,6 +1,9 @@
 package com.dubois.yann.go4lunch.controller;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -9,6 +12,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
@@ -122,15 +127,26 @@ public class MainActivity extends AppCompatActivity {
         NavController mNavController = mNavHostFragment.getNavController();
         NavigationUI.setupWithNavController(mBinding.bottomNavigation, mNavController);
 
-        //Get notification token
-        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
-            @Override
-            public void onComplete(@NonNull Task<String> task) {
-                if (task.isSuccessful()){
-                    notificationToken = task.getResult();
-                }
-            }
-        });
+        //Notification
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Test";
+            String description ="Test description";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("channel", name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "channel")
+                .setSmallIcon(R.drawable.ic_go4lunch)
+                .setContentTitle("Test")
+                .setContentText("Restaurant choice")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        // notificationId is a unique int for each notification that you must define
+        notificationManager.notify(1, notificationBuilder.build());
     }
 
     private void addUserToDatabase() {
@@ -161,5 +177,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 }
