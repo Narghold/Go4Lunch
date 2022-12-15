@@ -58,7 +58,7 @@ public class SplashScreen extends AppCompatActivity implements EasyPermissions.P
         if (EasyPermissions.hasPermissions(this, Manifest.permission.POST_NOTIFICATIONS)){
             Toast.makeText(this, "Notification permission", Toast.LENGTH_LONG).show();
         }else {
-            EasyPermissions.requestPermissions(this,"rationale", RC_NOTIFICATION_PERM, Manifest.permission.POST_NOTIFICATIONS);
+            EasyPermissions.requestPermissions(this, getString(R.string.rationale_rq_notification), RC_NOTIFICATION_PERM, Manifest.permission.POST_NOTIFICATIONS);
         }
     }
 

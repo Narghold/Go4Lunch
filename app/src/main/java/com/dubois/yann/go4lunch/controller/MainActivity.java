@@ -126,27 +126,6 @@ public class MainActivity extends AppCompatActivity {
         assert mNavHostFragment != null;
         NavController mNavController = mNavHostFragment.getNavController();
         NavigationUI.setupWithNavController(mBinding.bottomNavigation, mNavController);
-
-        //Notification
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Test";
-            String description ="Test description";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel("channel", name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "channel")
-                .setSmallIcon(R.drawable.ic_go4lunch)
-                .setContentTitle("Test")
-                .setContentText("Restaurant choice")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        // notificationId is a unique int for each notification that you must define
-        notificationManager.notify(1, notificationBuilder.build());
     }
 
     private void addUserToDatabase() {

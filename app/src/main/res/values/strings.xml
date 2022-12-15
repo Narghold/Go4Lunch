@@ -44,9 +44,10 @@
     <string name="btn_like">Like</string>
     <string name="btn_website">Website</string>
 
-    <!-- Location request -->
+    <!-- Permissions request -->
     <string name="rationale_rq_location">This app needs access to your location.</string>
     <string name="rationale_rq_location_second">This app needs access to your location to work properly.</string>
+    <string name="rationale_rq_notification">Remind me the restaurant I choose.</string>
 
     <!-- Place Recycler -->
     <string name="open_now">Open now</string>
