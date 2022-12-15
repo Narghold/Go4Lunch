@@ -57,7 +57,9 @@ public class NotificationJobService extends JobService {
 
     public static void scheduleJob(Context context) {
         ComponentName serviceComponent = new ComponentName(context, NotificationJobService.class);
-        JobInfo jobInfo = new JobInfo.Builder(0, serviceComponent).build();
+        JobInfo jobInfo = new JobInfo.Builder(0, serviceComponent)
+                .setMinimumLatency(1000)
+                .build();
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(JOB_SCHEDULER_SERVICE);
         jobScheduler.schedule(jobInfo);
     }

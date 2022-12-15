@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -27,7 +28,16 @@
         </activity>
         <activity android:name=".controller.MainActivity" />
 
-        <receiver android:name=".controller.notification.AlarmReceiver"/>
+        <receiver
+            android:name=".controller.notification.AlarmReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.LOCALE_CHANGED" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".controller.notification.NotificationJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
 
 
         <meta-data
@@ -45,9 +55,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
-        <service android:name=".controller.notification.NotificationJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
 
     </application>
 
