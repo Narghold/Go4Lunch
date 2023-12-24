@@ -1,7 +1,9 @@
 package com.dubois.yann.go4lunch.controller;
 
+import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
 import com.dubois.yann.go4lunch.R;
+import com.dubois.yann.go4lunch.controller.notification.AlarmReceiver;
 import com.dubois.yann.go4lunch.controller.ui.place_details.PlaceDetailsActivity;
 import com.dubois.yann.go4lunch.databinding.ActivityMainBinding;
 import com.dubois.yann.go4lunch.model.User;
@@ -34,6 +37,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.util.Calendar;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -58,6 +62,19 @@ public class MainActivity extends AppCompatActivity {
         //Get database instance
         mDatabase = FirebaseFirestore.getInstance();
         addUserToDatabase();
+
+        //AlarmManager
+        Intent receiverIntent = new Intent(this, AlarmReceiver.class);
+        PendingIntent receiverPendingIntent = PendingIntent.getBroadcast(this, 0, receiverIntent, 0);
+        //Set the hour
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 12); //Set midday
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        //Setup AlarmManager
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, receiverPendingIntent);
+        //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, receiverPendingIntent);
 
         //AppBar
         setSupportActionBar(mBinding.topAppBar);

@@ -28,17 +28,10 @@
         </activity>
         <activity android:name=".controller.MainActivity" />
 
-        <receiver
-            android:name=".controller.notification.AlarmReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.LOCALE_CHANGED" />
-            </intent-filter>
-        </receiver>
+        <receiver android:name=".controller.notification.AlarmReceiver"/>
 
         <service android:name=".controller.notification.NotificationJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
-
 
         <meta-data
             android:name="com.facebook.sdk.ClientToken"
